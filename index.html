@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RR Traders - Executive Solar Tool</title>
+    <!-- html2canvas library for client-side image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #0f172a;
@@ -17,26 +19,33 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 2rem 1rem; }
+        body { background-color: var(--bg); color: var(--text); padding: 1rem; }
         .container { max-width: 1200px; margin: 0 auto; }
         
         header {
-            background: var(--primary); color: white; padding: 2rem;
+            background: var(--primary); color: white; padding: 1.5rem;
             border-radius: 12px; margin-bottom: 1.5rem;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; flex-direction: column; gap: 0.5rem;
         }
-        header h1 { font-size: 2rem; font-weight: 800; letter-spacing: 0.5px; }
+        @media(min-width: 768px) {
+            body { padding: 2rem 1rem; }
+            header { padding: 2rem; flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+        header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: 0.5px; }
         header p { color: #94a3b8; font-size: 0.95rem; margin-top: 0.2rem; }
 
         /* Navigation Tabs Layout */
         .tabs-nav {
-            display: flex; gap: 0.5rem; margin-bottom: 1.5rem;
+            display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 1.5rem;
             background: #e2e8f0; padding: 0.4rem; border-radius: 10px;
         }
         .tab-btn {
-            flex: 1; padding: 0.75rem 1rem; border: none; background: transparent;
-            font-size: 1rem; font-weight: 600; color: #475569; cursor: pointer;
+            flex: 1; min-width: 120px; padding: 0.75rem 0.5rem; border: none; background: transparent;
+            font-size: 0.9rem; font-weight: 600; color: #475569; cursor: pointer;
             border-radius: 8px; transition: all 0.2s ease; text-align: center;
+        }
+        @media(min-width: 768px) {
+            .tab-btn { font-size: 1rem; padding: 0.75rem 1rem; }
         }
         .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
@@ -45,19 +54,25 @@
 
         /* Sticky Summary Dashboards */
         .summary-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;
+            display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;
+        }
+        @media(min-width: 768px) {
+            .summary-grid { grid-template-columns: 1fr 1fr; }
         }
         .dash-card {
-            background: var(--card-bg); padding: 1.5rem; border-radius: 12px;
+            background: var(--card-bg); padding: 1.25rem; border-radius: 12px;
             border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
         .dash-card.accent-border { border: 2px solid var(--accent); }
         .dash-card.success-border { border: 2px solid var(--success); }
         .dash-label { font-size: 0.85rem; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; font-weight: 600; }
-        .dash-val { font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-top: 0.2rem; }
+        .dash-val { font-size: 1.6rem; font-weight: 800; color: var(--primary); margin-top: 0.2rem; }
         .dash-sub { font-size: 0.85rem; color: #64748b; margin-top: 0.3rem; }
 
-        .controls { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+        .controls { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+        @media(min-width: 768px) {
+            .controls { grid-template-columns: 2fr 1fr; }
+        }
         input, select {
             width: 100%; padding: 0.75rem 1rem;
             border: 1px solid var(--border); border-radius: 8px;
@@ -69,38 +84,47 @@
             background: var(--card-bg); border-radius: 12px;
             border: 1px solid var(--border); overflow-x: auto; margin-bottom: 2rem;
         }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
+        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
         th { background: #f1f5f9; padding: 1rem; font-weight: 600; font-size: 0.9rem; color: #475569; border-bottom: 2px solid var(--border); }
         td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; }
         
-        .qty-input, .rate-edit-input { width: 110px; padding: 0.5rem; text-align: center; border-radius: 6px; border: 1px solid var(--border); font-weight: 600; }
+        .qty-input, .rate-edit-input { width: 100%; max-width: 110px; padding: 0.5rem; text-align: center; border-radius: 6px; border: 1px solid var(--border); font-weight: 600; }
         .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
         .badge-ongrid { background: #e0f2fe; color: #0369a1; }
         .badge-hybrid { background: #faf5ff; color: #7e22ce; }
         .badge-panel { background: #f0fdf4; color: #15803d; }
         .badge-battery { background: #fff7ed; color: #c2410c; }
 
-        /* Quotation Styling layout elements */
+        /* Quotation Setup Box */
         .quote-config-box {
-            background: #f1f5f9; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;
-            display: flex; gap: 1rem; align-items: center; wrap: wrap;
+            background: #f1f5f9; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        @media(min-width: 768px) {
+            .quote-config-box { flex-direction: row; align-items: center; }
+        }
+
+        /* Invoice Container Layout Styling */
+        .invoice-wrapper {
+            width: 100%; max-width: 550px; margin: 0 auto 2rem auto; overflow-x: auto; padding: 5px;
         }
         .quote-bill-box {
-            background: #fff; border: 2px dashed #cbd5e1; padding: 2rem; border-radius: 12px;
-            max-width: 600px; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            background: #ffffff; border: 1px solid #cbd5e1; padding: 2rem; border-radius: 0px;
+            width: 100%; min-width: 480px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative;
         }
-        .bill-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px dashed #e2e8f0; }
-        .bill-row.total-row { border-top: 2px solid var(--primary); border-bottom: double var(--primary); font-weight: 800; font-size: 1.25rem; color: var(--primary); margin-top: 1rem; padding-top: 1rem; }
+        .bill-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.95rem; align-items: center; }
+        .bill-row.total-row { border-top: 2px solid var(--primary); border-bottom: 4px double var(--primary); font-weight: 800; font-size: 1.4rem; color: var(--primary); margin-top: 1.5rem; padding-top: 1rem; }
         
-        .save-btn {
+        .action-btn {
             background: var(--success); color: white; border: none; padding: 0.75rem 1.5rem;
             border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
+            display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;
         }
-        .save-btn:hover { background: #15803d; }
+        .action-btn:hover { background: #15803d; }
+        .action-btn.blue { background: #2563eb; }
+        .action-btn.blue:hover { background: #1d4ed8; }
 
-        @media(max-width: 768px) {
-            .summary-grid, .controls, .quote-config-box { grid-template-columns: 1fr; flex-direction: column; }
-        }
+        .btn-container { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
     </style>
 </head>
 <body>
@@ -111,33 +135,32 @@
             <h1>RR TRADERS</h1>
             <p>Smart Commercial Solar Management System</p>
         </div>
-        <div style="text-align: right; font-size: 0.85rem; color: #94a3b8;">Firm Identity: Internal Engine</div>
+        <div style="text-align: right; font-size: 0.85rem; color: #94a3b8;">Bareilly, UP</div>
     </header>
 
-    <!-- Top Navigation Tabs Hierarchy -->
     <div class="tabs-nav">
         <button class="tab-btn active" onclick="switchTab('calculator-tab', this)">📊 Purchase Calculator</button>
         <button class="tab-btn" onclick="switchTab('edit-rates-tab', this)">⚙️ Edit Master Rates</button>
         <button class="tab-btn" onclick="switchTab('quotation-tab', this)">📜 Customer Quotation</button>
     </div>
 
-    <!-- TAB 1: CALCULATOR & STOCK SELECTION -->
+    <!-- TAB 1: CALCULATOR -->
     <div id="calculator-tab" class="tab-content active">
         <div class="summary-grid">
             <div class="dash-card accent-border">
-                <div class="dash-label">Your Total Procurement Cost</div>
+                <div class="dash-label">Internal Procurement Cost</div>
                 <div class="dash-val" id="calcGrandTotal">₹0.00</div>
                 <div class="dash-sub" id="calcLaborDisplay">Labor Component: ₹0.00</div>
             </div>
             <div class="dash-card">
                 <div class="dash-label">Batch Volume Metrics</div>
                 <div class="dash-val" id="calcItemCount">0 Units</div>
-                <div class="dash-sub">Total selected items ready for orders</div>
+                <div class="dash-sub">Total operational items active inside current batch</div>
             </div>
         </div>
 
         <div class="controls">
-            <input type="text" id="searchBar" placeholder="Search product profile (e.g. 3KW, 530W)..." oninput="filterCalculatorProducts()">
+            <input type="text" id="searchBar" placeholder="Search item specs (e.g. 3KW, 530W)..." oninput="filterCalculatorProducts()">
             <select id="categoryFilter" onchange="filterCalculatorProducts()">
                 <option value="all">All Product Verticals</option>
                 <option value="On-Grid">On-Grid Systems</option>
@@ -164,12 +187,12 @@
         </div>
     </div>
 
-    <!-- TAB 2: EDITING ACTIVE MASTER RATES -->
+    <!-- TAB 2: EDITING MASTER RATES -->
     <div id="edit-rates-tab" class="tab-content">
         <div style="background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1.5rem;">
-            <h3 style="margin-bottom: 1rem; color: var(--primary);">Global Variable Configuration</h3>
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">Global Cost Modifiers</h3>
             <div style="display: flex; gap: 1rem; align-items: center; max-width: 400px;">
-                <label style="font-weight: 600; min-width: 180px;">Installation (Per Watt):</label>
+                <label style="font-weight: 600; min-width: 160px;">Installation (Per Watt):</label>
                 <input type="number" id="globalLaborInput" class="rate-edit-input" style="width: 100%; text-align: left;" onchange="updateGlobalLabor(this.value)">
             </div>
         </div>
@@ -187,66 +210,87 @@
                 <tbody id="editRatesTableBody"></tbody>
             </table>
         </div>
-        <div style="text-align: right;">
-            <button class="save-btn" onclick="saveMasterRatesAndRefresh()">💾 Save Changes & Re-evaluate Data</button>
+        <div style="text-align: right; margin-bottom: 2rem;">
+            <button class="action-btn blue" onclick="saveMasterRatesAndRefresh()">💾 Save Changes & Re-evaluate Data</button>
         </div>
     </div>
 
     <!-- TAB 3: CUSTOMER QUOTATION GENERATOR -->
     <div id="quotation-tab" class="tab-content">
         <div class="quote-config-box">
-            <div style="flex: 1;">
-                <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Target Client Profit Margin (%)</label>
+            <div style="width: 100%; max-width: 250px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Target Profit Margin (%)</label>
                 <input type="number" id="marginInput" value="15" min="0" max="100" oninput="calculateQuotation()">
             </div>
-            <div style="flex: 2; align-self: flex-end;">
-                <p style="color: #64748b; font-size: 0.9rem;">The engine automatically runs a compounding calculation over internal hardware buying metrics and overlays your selected profit margin percentage to generate professional customer billing data.</p>
+            <div style="flex: 1;">
+                <p style="color: #64748b; font-size: 0.88rem;">Set your margin here. Internal data calculations are applied live below, but <strong>the structural margin numbers and buying costs are stripped away from the export layout completely</strong> for full customer safety.</p>
             </div>
         </div>
 
         <div class="summary-grid">
             <div class="dash-card success-border">
-                <div class="dash-label">Final Customer Quote Value</div>
+                <div class="dash-label">Final Customer Retail Quote</div>
                 <div class="dash-val" id="quoteGrandTotal">₹0.00</div>
                 <div class="dash-sub" id="quoteProfitMarginDisplay">Net Profit Margin: ₹0.00</div>
             </div>
             <div class="dash-card">
-                <div class="dash-label">Internal Base Investment Cost</div>
+                <div class="dash-label">Internal Cost Basis</div>
                 <div class="dash-val" id="quoteBaseCost">₹0.00</div>
-                <div class="dash-sub">Sum of all base equipment and field labor metrics</div>
+                <div class="dash-sub">Base hardware cost + structural labor allocation</div>
             </div>
         </div>
 
-        <!-- Professional Generated Quotation Invoice Format -->
-        <div class="quote-bill-box">
-            <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 1rem;">
-                <h2 style="letter-spacing: 1px;">RR TRADERS</h2>
-                <p style="color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Solar Energy Solution Quotation</p>
+        <div class="btn-container">
+            <button class="action-btn" onclick="exportQuotationImage()">📸 Download Quotation Image</button>
+        </div>
+
+        <!-- Printable Custom-Facing Invoice Element Container Layout -->
+        <div class="invoice-wrapper">
+            <div class="quote-bill-box" id="customerInvoiceElement">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; border-bottom: 3px solid var(--primary); padding-bottom: 1rem;">
+                    <div>
+                        <h2 style="letter-spacing: 1.5px; font-weight: 800; color: var(--primary); font-size: 1.6rem;">RR TRADERS</h2>
+                        <p style="color: #475569; font-size: 0.85rem; font-weight: 600; margin-top: 2px;">Solar Power & Green Energy Solutions</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="background: var(--primary); color: white; padding: 4px 8px; font-size: 0.75rem; font-weight: bold; border-radius: 4px;">OFFICIAL QUOTE</span>
+                        <p style="font-size: 0.8rem; color: #64748b; margin-top: 6px;" id="invoiceDateDisplay"></p>
+                    </div>
+                </div>
+
+                <!-- Dynamic Items Insert Frame Row Header -->
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 8px 12px; font-weight: bold; font-size: 0.85rem; color: #475569; border-radius: 6px; margin-bottom: 0.5rem;">
+                        <span>System Description & Scope</span>
+                        <span>Item Total</span>
+                    </div>
+                    <div id="invoiceItemsContainer">
+                        <!-- Injected dynamically via state data arrays -->
+                    </div>
+                </div>
+
+                <div class="bill-row total-row">
+                    <span>Estimated Net Turnkey Value</span>
+                    <span id="invoiceGrandTotal">₹0.00</span>
+                </div>
+                
+                <div style="margin-top: 2rem; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.85rem; color: #334155; margin-bottom: 4px; font-weight: 700;">Terms & Project Scope Conditions:</h4>
+                    <ul style="font-size: 0.78rem; color: #64748b; padding-left: 1.2rem; line-height: 1.4;">
+                        <li>Pricing models factor comprehensive component testing and full baseline execution setups.</li>
+                        <li>Quoted systems remain locked down and validated for exactly 7 business days from timestamp.</li>
+                        <li>All component warranties are directly mapped against native manufacturer certifications.</li>
+                    </ul>
+                </div>
             </div>
-            <div id="invoiceItemsContainer">
-                <!-- Injected via calculation state dynamic updates -->
-            </div>
-            <div class="bill-row">
-                <span>Subtotal (Hardware & Services)</span>
-                <span id="invoiceSubtotal">₹0.00</span>
-            </div>
-            <div class="bill-row">
-                <span id="invoiceMarginLabel">Estimated Net Margin (15%)</span>
-                <span id="invoiceMarginValue">₹0.00</span>
-            </div>
-            <div class="bill-row total-row">
-                <span>Total Estimated Cost</span>
-                <span id="invoiceGrandTotal">₹0.00</span>
-            </div>
-            <p style="font-size: 0.75rem; color: #94a3b8; text-align: center; margin-top: 1.5rem; font-style: italic;">Thank you for choosing RR Traders. Estimates are valid for 7 business days pending active component market updates.</p>
         </div>
     </div>
 </div>
 
 <script>
-    // Master Global State Storage (Saved inside client LocalStorage for complete cross-refresh stability)
     let masterProducts = [];
     let laborRatePerWatt = 7;
+    let currentQuantities = {};
 
     const defaultProducts = [
         { cat: 'On-Grid', type: 'badge-ongrid', name: '1 KW Inverter', rate: 14200, spec: '10 Years Full Warranty', isPanel: false },
@@ -260,33 +304,30 @@
         { cat: 'Hybrid', type: 'badge-hybrid', name: '5 KW Inverter (48V)', rate: 49000, spec: '5 Years Warranty', isPanel: false },
         { cat: 'Hybrid', type: 'badge-hybrid', name: '7.5 KW Inverter (48V)', rate: 68200, spec: '5 Years Warranty', isPanel: false },
         { cat: 'Hybrid', type: 'badge-hybrid', name: '10 KW Inverter (48V)', rate: 86500, spec: '5 Years Warranty', isPanel: false },
-        { cat: 'Panels', type: 'badge-panel', name: 'DCR Panel 530W', rate: 12402, spec: '₹23.40/W Base Calculation Parameters', isPanel: true, watts: 530 },
-        { cat: 'Panels', type: 'badge-panel', name: 'Non-DCR Panel 550W', rate: 7975, spec: '₹14.50/W Base Calculation Parameters', isPanel: true, watts: 550 },
-        { cat: 'Batteries', type: 'badge-battery', name: 'Solar Battery 200Ah', rate: 13500, spec: '36 + 36 Months Warranty Structure', isPanel: false }
+        { cat: 'Panels', type: 'badge-panel', name: 'DCR Panel 530W', rate: 12402, spec: '₹23.40/W Base Parameters', isPanel: true, watts: 530 },
+        { cat: 'Panels', type: 'badge-panel', name: 'Non-DCR Panel 550W', rate: 7975, spec: '₹14.50/W Base Parameters', isPanel: true, watts: 550 },
+        { cat: 'Batteries', type: 'badge-battery', name: 'Solar Battery 200Ah', rate: 13500, spec: '36 + 36 Months Warranty', isPanel: false }
     ];
-
-    // Quantities structural tracking map
-    let currentQuantities = {};
 
     function initData() {
         const storedProducts = localStorage.getItem('rr_master_products');
         const storedLabor = localStorage.getItem('rr_labor_rate');
         
-        if (storedProducts) {
-            masterProducts = JSON.parse(storedProducts);
-        } else {
+        if (storedProducts) { masterProducts = JSON.parse(storedProducts); } 
+        else {
             masterProducts = [...defaultProducts];
             localStorage.setItem('rr_master_products', JSON.stringify(masterProducts));
         }
 
-        if (storedLabor) {
-            laborRatePerWatt = parseFloat(storedLabor);
-        } else {
-            localStorage.setItem('rr_labor_rate', laborRatePerWatt);
-        }
+        if (storedLabor) { laborRatePerWatt = parseFloat(storedLabor); } 
+        else { localStorage.setItem('rr_labor_rate', laborRatePerWatt); }
 
         masterProducts.forEach((p, idx) => { currentQuantities[idx] = 0; });
         document.getElementById('globalLaborInput').value = laborRatePerWatt;
+        
+        // Setup Date configuration text format
+        const today = new Date();
+        document.getElementById('invoiceDateDisplay').innerText = `Date: ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
     }
 
     function switchTab(tabId, btnElement) {
@@ -300,14 +341,11 @@
         if(tabId === 'quotation-tab') { calculateQuotation(); }
     }
 
-    /* TAB 1 LOGIC: PROCUREMENT CALCS */
     function renderCalculatorTable(dataItems) {
         const tbody = document.getElementById('calcTableBody');
         tbody.innerHTML = dataItems.map(p => {
             const originalIndex = masterProducts.findIndex(mp => mp.name === p.name);
             const currentQty = currentQuantities[originalIndex] || 0;
-            const lineTotal = currentQty * p.rate;
-            
             return `
                 <tr>
                     <td><span class="badge ${p.type}">${p.cat}</span></td>
@@ -315,7 +353,7 @@
                     <td>₹${p.rate.toLocaleString('en-IN')}</td>
                     <td style="color:#64748b; font-size:0.85rem;">${p.spec}</td>
                     <td><input type="number" class="qty-input" min="0" value="${currentQty}" data-index="${originalIndex}" oninput="syncQty(this)"></td>
-                    <td style="text-align: right; font-weight:700;" id="calc-total-${originalIndex}">₹${lineTotal.toLocaleString('en-IN')}</td>
+                    <td style="text-align: right; font-weight:700;" id="calc-total-${originalIndex}">₹${(currentQty * p.rate).toLocaleString('en-IN')}</td>
                 </tr>
             `;
         }).join('');
@@ -324,7 +362,6 @@
     function filterCalculatorProducts() {
         const query = document.getElementById('searchBar').value.toLowerCase();
         const category = document.getElementById('categoryFilter').value;
-
         const filtered = masterProducts.filter(p => {
             const matchSearch = p.name.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query);
             const matchCat = category === 'all' || p.cat === category;
@@ -337,36 +374,26 @@
         const idx = parseInt(inputElement.getAttribute('data-index'));
         const value = parseInt(inputElement.value) || 0;
         currentQuantities[idx] = value;
-        
-        const lineTotal = value * masterProducts[idx].rate;
-        document.getElementById(`calc-total-${idx}`).innerText = '₹' + lineTotal.toLocaleString('en-IN');
-        
+        document.getElementById(`calc-total-${idx}`).innerText = '₹' + (value * masterProducts[idx].rate).toLocaleString('en-IN');
         evaluateGlobalTotals();
     }
 
     function evaluateGlobalTotals() {
-        let equipmentTotal = 0;
-        let laborTotal = 0;
-        let unitCount = 0;
-
+        let equipmentTotal = 0; let laborTotal = 0; let unitCount = 0;
         masterProducts.forEach((product, idx) => {
             const qty = currentQuantities[idx] || 0;
             if (qty > 0) {
                 equipmentTotal += (qty * product.rate);
                 unitCount += qty;
-                if(product.isPanel) {
-                    laborTotal += (laborRatePerWatt * product.watts * qty);
-                }
+                if(product.isPanel) { laborTotal += (laborRatePerWatt * product.watts * qty); }
             }
         });
-
         let totalProcurement = equipmentTotal + laborTotal;
         document.getElementById('calcGrandTotal').innerText = '₹' + totalProcurement.toLocaleString('en-IN');
         document.getElementById('calcLaborDisplay').innerText = `Labor Component: ₹${laborTotal.toLocaleString('en-IN')} (At ₹${laborRatePerWatt}/W)`;
         document.getElementById('calcItemCount').innerText = `${unitCount} Hardware Units`;
     }
 
-    /* TAB 2 LOGIC: MASTER RATES MANAGER */
     function renderEditRatesTable() {
         const tbody = document.getElementById('editRatesTableBody');
         tbody.innerHTML = masterProducts.map((p, idx) => `
@@ -380,34 +407,25 @@
     }
 
     function updateGlobalLabor(val) {
-        const standardVal = parseFloat(val) || 0;
-        laborRatePerWatt = standardVal;
+        laborRatePerWatt = parseFloat(val) || 0;
         localStorage.setItem('rr_labor_rate', laborRatePerWatt);
     }
 
     function saveMasterRatesAndRefresh() {
         masterProducts.forEach((p, idx) => {
-            const inputField = document.getElementById(`edit-rate-field-${idx}`);
-            if(inputField) {
-                const parsedRate = parseInt(inputField.value) || 0;
-                masterProducts[idx].rate = parsedRate;
-            }
+            const field = document.getElementById(`edit-rate-field-${idx}`);
+            if(field) masterProducts[idx].rate = parseInt(field.value) || 0;
         });
-        
         localStorage.setItem('rr_master_products', JSON.stringify(masterProducts));
         evaluateGlobalTotals();
-        alert('Master acquisition rates successfully compiled and locked down across tracking modules.');
+        alert('Master rates securely deployed.');
         switchTab('calculator-tab', document.querySelectorAll('.tab-btn')[0]);
         filterCalculatorProducts();
     }
 
-    /* TAB 3 LOGIC: CUSTOMER QUOTATION GENERATOR */
     function calculateQuotation() {
         const marginPercentage = parseFloat(document.getElementById('marginInput').value) || 0;
-        
-        let baseEquipmentCost = 0;
-        let baseLaborCost = 0;
-        let itemsSelectedHTML = '';
+        let baseEquipmentCost = 0; let baseLaborCost = 0; let itemsSelectedHTML = '';
 
         masterProducts.forEach((product, idx) => {
             const qty = currentQuantities[idx] || 0;
@@ -416,22 +434,18 @@
                 baseEquipmentCost += itemBaseCost;
                 
                 let itemLaborCost = 0;
-                if(product.isPanel) {
-                    itemLaborCost = laborRatePerWatt * product.watts * qty;
-                    baseLaborCost += itemLaborCost;
-                }
+                if(product.isPanel) { itemLaborCost = laborRatePerWatt * product.watts * qty; baseLaborCost += itemLaborCost; }
 
-                // Customer price per item including markup margin
                 const totalItemBase = itemBaseCost + itemLaborCost;
                 const totalItemCustomer = totalItemBase * (1 + (marginPercentage / 100));
 
                 itemsSelectedHTML += `
-                    <div class="bill-row">
+                    <div class="bill-row" style="padding: 10px 12px;">
                         <div>
-                            <strong>${product.name}</strong> <br>
-                            <span style="font-size:0.8rem; color:#64748b;">Quantity: ${qty} units selected</span>
+                            <span style="font-weight: 700; color: #1e293b; font-size:1rem;">${product.name}</span> <br>
+                            <span style="font-size:0.8rem; color:#64748b; font-weight:600;">Quantity Matrix: ${qty} Unit(s)</span>
                         </div>
-                        <span style="font-weight:600;">₹${totalItemCustomer.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                        <span style="font-weight:700; color:#0f172a; font-size:1.05rem;">₹${totalItemCustomer.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                     </div>
                 `;
             }
@@ -441,26 +455,43 @@
         const profitMarginValueCalculated = globalBaseCostSum * (marginPercentage / 100);
         const finalCustomerPriceCalculated = globalBaseCostSum + profitMarginValueCalculated;
 
-        // Update Tab Metric Overview Cards
         document.getElementById('quoteBaseCost').innerText = '₹' + globalBaseCostSum.toLocaleString('en-IN');
         document.getElementById('quoteGrandTotal').innerText = '₹' + finalCustomerPriceCalculated.toLocaleString('en-IN', {maximumFractionDigits: 0});
         document.getElementById('quoteProfitMarginDisplay').innerText = `Net Profit Margin: ₹${profitMarginValueCalculated.toLocaleString('en-IN', {maximumFractionDigits: 0})} (${marginPercentage}%)`;
 
-        // Inject data layout inside printable receipt component block
         const container = document.getElementById('invoiceItemsContainer');
-        if(itemsSelectedHTML === '') {
-            container.innerHTML = `<p style="text-align:center; color:#94a3b8; padding: 1rem 0;">No items loaded from the purchase table. Build an order vector first in Tab 1.</p>`;
-        } else {
-            container.innerHTML = itemsSelectedHTML;
-        }
-
-        document.getElementById('invoiceSubtotal').innerText = '₹' + globalBaseCostSum.toLocaleString('en-IN');
-        document.getElementById('invoiceMarginLabel').innerText = `Net Profit Markup Margin (${marginPercentage}%)`;
-        document.getElementById('invoiceMarginValue').innerText = '₹' + profitMarginValueCalculated.toLocaleString('en-IN', {maximumFractionDigits: 0});
+        container.innerHTML = itemsSelectedHTML || `<p style="text-align:center; color:#94a3b8; padding: 2rem 0;">No hardware assets selected. Set project vectors in Tab 1.</p>`;
         document.getElementById('invoiceGrandTotal').innerText = '₹' + finalCustomerPriceCalculated.toLocaleString('en-IN', {maximumFractionDigits: 0});
     }
 
-    // Main script boot sequence hook inside DOM environment
+    // Capture Invoice element and trigger local browser picture down-loader flow 
+    function exportQuotationImage() {
+        const invoice = document.getElementById('customerInvoiceElement');
+        
+        // Apply temporary inline optimization style flags for high resolution rendering capture
+        invoice.style.boxShadow = 'none';
+        invoice.style.border = '1px solid #000000';
+
+        html2canvas(invoice, {
+            scale: 2, // Forces clear double pixel sizing optimization (prevents mobile text blur)
+            logging: false,
+            useCORS: true,
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            // Restore native UI display states safely 
+            invoice.style.boxShadow = '';
+            invoice.style.border = '';
+
+            const link = document.createElement('a');
+            link.download = `RR_Traders_Solar_Quotation.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            alert('Image capture engine initialization fault.');
+            console.error(err);
+        });
+    }
+
     initData();
     filterCalculatorProducts();
     evaluateGlobalTotals();
