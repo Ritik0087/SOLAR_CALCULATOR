@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RR Traders - Executive Solar Engine</title>
+    <title>RR Traders - UTL Fujiyama Solar Engine</title>
     <!-- Stable html2canvas CDN for crisp image generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -33,35 +33,38 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: background-color 0.25s ease, border-color 0.25s ease; }
-        body { background-color: var(--bg); color: var(--text-main); padding: 1rem; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 0.75rem; }
         .container { max-width: 1200px; margin: 0 auto; }
         
         /* Master Layout Frames */
         header {
             background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155;
-            color: white; padding: 1.5rem; border-radius: 14px; margin-bottom: 1.5rem;
-            display: flex; flex-direction: column; gap: 1rem;
+            color: white; padding: 1.25rem; border-radius: 14px; margin-bottom: 1.25rem;
+            display: flex; flex-direction: column; gap: 0.75rem;
         }
         [data-theme="light"] header { background: linear-gradient(135deg, #ffffff, #f1f5f9); border-color: #cbd5e1; color: #0f172a; }
         
-        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .header-title-area h1 { font-weight: 900; letter-spacing: 0.5px; font-size: 1.4rem; line-height: 1.2; }
+        
         .theme-btn {
             background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border);
-            padding: 0.6rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;
+            padding: 0.5rem 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; white-space: nowrap;
         }
 
         /* Navigation Systems Layout */
         .tabs-nav {
-            display: flex; gap: 0.4rem; margin-bottom: 1.5rem;
-            background: rgba(0,0,0,0.15); padding: 0.4rem; border-radius: 10px;
+            display: flex; gap: 0.3rem; margin-bottom: 1.25rem;
+            background: rgba(0,0,0,0.15); padding: 0.3rem; border-radius: 10px;
         }
         [data-theme="light"] .tabs-nav { background: #e2e8f0; }
         .tab-btn {
-            flex: 1; padding: 0.8rem 0.5rem; border: none; background: transparent;
-            font-size: 0.9rem; font-weight: 700; color: var(--text-muted); cursor: pointer;
-            border-radius: 8px; text-align: center;
+            flex: 1; padding: 0.75rem 0.3rem; border: none; background: transparent;
+            font-size: 0.8rem; font-weight: 700; color: var(--text-muted); cursor: pointer;
+            border-radius: 8px; text-align: center; white-space: nowrap;
         }
+        @media(min-width: 480px) { .tab-btn { font-size: 0.9rem; padding: 0.8rem 0.5rem; } }
         .tab-btn.active { background: var(--card-bg); color: var(--text-main); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
 
         .tab-content { display: none; }
@@ -69,8 +72,8 @@
 
         /* Configuration Boxes Frame */
         .config-panel {
-            background: var(--card-bg); border: 1px solid var(--border); padding: 1.5rem;
-            border-radius: 12px; margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1rem;
+            background: var(--card-bg); border: 1px solid var(--border); padding: 1.25rem;
+            border-radius: 12px; margin-bottom: 1.25rem; display: grid; grid-template-columns: 1fr; gap: 1rem;
         }
         @media(min-width: 768px) { .config-panel { grid-template-columns: 1fr 1fr; } }
         
@@ -84,8 +87,11 @@
 
         /* Touch & Add Grid Deck Cards */
         .cards-deck-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem;
+            display: grid; grid-template-columns: 1fr; gap: 0.85rem; margin-bottom: 1.5rem;
         }
+        @media(min-width: 480px) { .cards-deck-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); } }
+        @media(min-width: 768px) { .cards-deck-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; } }
+        
         .product-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
             padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;
@@ -94,17 +100,18 @@
         .product-card:hover { transform: translateY(-2px); border-color: var(--accent); }
         .product-card.has-qty { border-color: var(--success); background: linear-gradient(to bottom right, var(--card-bg), rgba(16, 185, 129, 0.03)); }
         
-        .card-badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.6rem; align-self: flex-start; }
+        .card-badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-bottom: 0.6rem; align-self: flex-start; }
         .badge-utl { background: #fee2e2; color: #991b1b; }
+        .badge-srv { background: #e0f2fe; color: #0369a1; }
         .card-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.4rem; line-height: 1.3; }
         .card-spec { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
-        .card-footer-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .card-price { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+        .card-footer-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 0.5rem; }
+        .card-price { font-size: 1.15rem; font-weight: 800; color: var(--accent); }
         
         .add-icon-btn {
             background: var(--accent); color: white; border: none; width: 36px; height: 36px;
             border-radius: 50%; font-size: 1.3rem; font-weight: bold; display: flex;
-            align-items: center; justify-content: center; transition: all 0.2s;
+            align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0;
         }
         .product-card:hover .add-icon-btn { background: var(--accent-hover); }
         .product-card.has-qty .add-icon-btn { background: var(--success); }
@@ -117,30 +124,31 @@
 
         /* Selected Drawer Component inside Tab 1 */
         .cart-drawer {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem;
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem;
         }
-        .cart-drawer h3 { font-size: 1.1rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; }
-        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
-        .cart-qty-controls { display: flex; align-items: center; gap: 0.6rem; }
+        .cart-drawer h3 { font-size: 1.05rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); gap: 1rem; }
+        .cart-qty-controls { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
         .qty-btn { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
         /* Master Global Dashboards Layout */
-        .summary-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-        @media(min-width: 768px) { .summary-grid { grid-template-columns: 1fr 1fr; } }
-        .dash-card { background: var(--card-bg); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border); }
+        .summary-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+        @media(min-width: 600px) { .summary-grid { grid-template-columns: 1fr 1fr; } }
+        .dash-card { background: var(--card-bg); padding: 1.1rem; border-radius: 12px; border: 1px solid var(--border); }
         .dash-card.accent-border { border-left: 5px solid var(--accent); }
         .dash-card.success-border { border-left: 5px solid var(--success); }
-        .dash-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
-        .dash-val { font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-top: 0.2rem; }
+        .dash-label { font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
+        .dash-val { font-size: 1.45rem; font-weight: 800; color: var(--text-main); margin-top: 0.2rem; }
 
         /* Structured Invoice Output Canvas Engine Container Layout */
-        .invoice-wrapper { width: 100%; max-width: 600px; margin: 0 auto 2rem auto; overflow-x: auto; padding: 5px; }
+        .invoice-wrapper { width: 100%; max-width: 100%; overflow-x: auto; margin: 0 auto 2rem auto; padding: 5px; }
         .quote-bill-box {
-            background: var(--invoice-bg); color: var(--invoice-text); padding: 2.2rem; border-radius: 0px;
-            width: 100%; min-width: 520px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); position: relative;
+            background: var(--invoice-bg); color: var(--invoice-text); padding: 1.5rem; border-radius: 0px;
+            width: 100%; min-width: 580px; max-width: 630px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15); position: relative;
         }
-        .bill-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px dashed #cbd5e1; font-size: 0.95rem; align-items: center; }
-        .bill-row.total-row { border-top: 2px solid #0f172a; border-bottom: 4px double #0f172a; font-weight: 900; font-size: 1.45rem; margin-top: 1.5rem; padding-top: 1rem; }
+        @media(min-width: 768px) { .quote-bill-box { padding: 2.2rem; } }
+        .bill-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px dashed #cbd5e1; font-size: 0.95rem; align-items: center; gap: 1rem; }
+        .bill-row.total-row { border-top: 2px solid #0f172a; border-bottom: 4px double #0f172a; font-weight: 900; font-size: 1.35rem; margin-top: 1.5rem; padding-top: 1rem; }
         
         .action-btn {
             background: var(--success); color: white; border: none; padding: 0.8rem 1.5rem;
@@ -161,19 +169,19 @@
 <div class="container">
     <header>
         <div class="header-top">
-            <div>
-                <h1 style="font-weight: 900; letter-spacing: 0.5px; font-size: 1.7rem;">RR TRADERS</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500; margin-top: 2px;">Authorized UTL FUJIYAMA Solar Distribution Hub</p>
+            <div class="header-title-area">
+                <h1>RR TRADERS</h1>
+                <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-top: 2px;">Authorized UTL FUJIYAMA Solar Distribution Hub</p>
             </div>
-            <button class="theme-btn" onclick="toggleSystemTheme()">🌓 Switch Theme</button>
+            <button class="theme-btn" onclick="toggleSystemTheme()">🌓 Theme</button>
         </div>
-        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">Location Context: Fatehganj Pashchimi, Bareilly, UP</div>
+        <div style="font-size: 0.78rem; font-weight: 700; color: var(--accent);">Location Context: Bareilly, Uttar Pradesh</div>
     </header>
 
     <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('calculator-tab', this)">🛍️ Select Products</button>
-        <button class="tab-btn" onclick="switchTab('quotation-tab', this)">📜 Customer Quote</button>
-        <button class="tab-btn" onclick="switchTab('edit-rates-tab', this)">⚙️ Master Buying Rates</button>
+        <button class="tab-btn active" onclick="switchTab('calculator-tab', this)">🛍️ Products Catalog</button>
+        <button class="tab-btn" onclick="switchTab('quotation-tab', this)">📜 View Quote</button>
+        <button class="tab-btn" onclick="switchTab('edit-rates-tab', this)">⚙️ Admin Rates</button>
     </div>
 
     <!-- TAB 1: PRODUCT CATALOG SELECTION (TOUCH & ADD CARDS) -->
@@ -181,7 +189,7 @@
         <div class="config-panel" style="grid-template-columns: 1fr;">
             <div class="form-group">
                 <label>Filter Catalog Search</label>
-                <input type="text" id="searchBar" placeholder="Search UTL products (e.g. Gamma, Mono, Battery)..." oninput="renderProductCards()">
+                <input type="text" id="searchBar" placeholder="Search products (On-Grid, Hybrid, Panel, Installation)..." oninput="renderProductCards()">
             </div>
         </div>
 
@@ -191,7 +199,7 @@
             <div id="cartItemsContainer"></div>
         </div>
 
-        <h3 style="margin-bottom:1rem; letter-spacing:0.3px;">Touch-to-Add UTL Fujiyama Range</h3>
+        <h3 style="margin-bottom:1rem; letter-spacing:0.3px; font-size:1.1rem;">Touch-to-Add UTL Fujiyama Solutions</h3>
         <div class="cards-deck-grid" id="catalogCardsGrid">
             <!-- Dynamic Injection of Touch Interactive Selection Elements -->
         </div>
@@ -209,7 +217,7 @@
         <div class="config-panel">
             <div class="form-group">
                 <label>Customer Name *</label>
-                <input type="text" id="customerNameInput" placeholder="Enter client identity tag..." oninput="calculateQuotation()">
+                <input type="text" id="customerNameInput" placeholder="Enter client name..." oninput="calculateQuotation()">
             </div>
             <div class="form-group">
                 <label>Target Mark-up Margin (%)</label>
@@ -235,22 +243,29 @@
         <!-- Render Target Window Framework for Image captures -->
         <div class="invoice-wrapper">
             <div class="quote-bill-box" id="customerInvoiceElement">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 3px solid #0f172a; padding-bottom: 1rem;">
-                    <div>
-                        <h2 style="letter-spacing: 1px; font-weight: 900; color: #0f172a; font-size: 1.7rem; text-transform: uppercase;">RR TRADERS</h2>
-                        <p style="color: #475569; font-size: 0.85rem; font-weight: 700; margin-top: 2px;">Solar Energy Solutions & Engineering</p>
-                        <p style="color: #64748b; font-size: 0.75rem; font-weight: 500; margin-top: 1px;">Bareilly, Uttar Pradesh</p>
+                <div style="border-bottom: 3px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1.2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                        <div>
+                            <h2 style="letter-spacing: 1.5px; font-weight: 900; color: #0f172a; font-size: 1.6rem; text-transform: uppercase; line-height: 1.1;">RR TRADERS</h2>
+                            <p style="color: #475569; font-size: 0.82rem; font-weight: 800; margin-top: 4px; letter-spacing: 0.3px;">Solar Energy Solutions & Engineering</p>
+                        </div>
+                        <div style="text-align: right; flex-shrink: 0;">
+                            <span style="background: #0f172a; color: white; padding: 4px 10px; font-size: 0.72rem; font-weight: 800; border-radius: 4px;">OFFICIAL QUOTE</span>
+                            <p style="font-size: 0.78rem; color: #475569; margin-top: 8px; font-weight: 700;" id="invoiceDateDisplay"></p>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <span style="background: #0f172a; color: white; padding: 4px 10px; font-size: 0.75rem; font-weight: 800; border-radius: 4px;">OFFICIAL INVOICE</span>
-                        <p style="font-size: 0.8rem; color: #475569; margin-top: 8px; font-weight: 700;" id="invoiceDateDisplay"></p>
+                    
+                    <!-- Added Mandatory Company Coordinates Headers -->
+                    <div style="margin-top: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 0.6rem; font-size: 0.82rem; color: #334155; line-height: 1.45; font-weight: 600;">
+                        <div>📍 <strong>Address:</strong> Mathurapur, Near Maa Ganga Jewellers, C.B. Ganj, Bareilly</div>
+                        <div>📞 <strong>Phone:</strong> +91 8449497205, +91 9012186727</div>
                     </div>
                 </div>
 
                 <!-- Client Frame Subhead Block Area -->
-                <div style="margin-bottom: 1.5rem; background: #f8fafc; padding: 0.8rem 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <div style="margin-bottom: 1.2rem; background: #f8fafc; padding: 0.8rem 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
                     <span style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 800; letter-spacing: 0.5px;">Quotation Prepared For:</span>
-                    <h3 style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-top: 2px;" id="billClientName">Walking Customer</h3>
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: 2px;" id="billClientName">Walking Customer</h3>
                 </div>
 
                 <!-- Dynamic Itemizations View Node Frame Rows -->
@@ -271,7 +286,7 @@
                 
                 <!-- Dynamic Warranty Blocks Compilation Terminal Framework -->
                 <div style="margin-top: 1.5rem;" id="invoiceWarrantySection">
-                    <h4 style="font-size: 0.85rem; color: #0f172a; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;">System Warranty Framework Parameters:</h4>
+                    <h4 style="font-size: 0.85rem; color: #0f172a; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;">System Parameters & Warranties:</h4>
                     <ul style="font-size: 0.8rem; color: #475569; padding-left: 1.2rem; line-height: 1.4; font-weight: 600;" id="invoiceWarrantyList">
                         <!-- Warranties auto compile here dynamically based on selected cards -->
                     </ul>
@@ -303,30 +318,36 @@
     let masterProducts = [];
     let activeQuantities = {};
 
-    const fallbackDefaultCatalog = [
-        { name: 'UTL Fujiyama Gamma+ 1kVA 12V rMPPT', rate: 11500, cat: 'Inverter', warranty: '3 Years Comprehensive Warranty' },
-        { name: 'UTL Fujiyama Gamma+ 2kVA 24V rMPPT', rate: 16800, cat: 'Inverter', warranty: '3 Years Comprehensive Warranty' },
-        { name: 'UTL Fujiyama ShineX 3.3kVA Split Phase', rate: 24200, cat: 'Inverter', warranty: '5 Years Manufacturer Protection' },
-        { name: 'UTL Fujiyama ShineX 5kVA 3-Phase Smart', rate: 43500, cat: 'Inverter', warranty: '5 Years Manufacturer Protection' },
-        { name: 'UTL Fujiyama 440W Mono PERC Panel Module', rate: 7480, cat: 'Panel', warranty: '25 Years Linear Power Output Warranty' },
-        { name: 'UTL Fujiyama 540W Mono PERC Half-Cut', rate: 11340, cat: 'Panel', warranty: '25 Years Linear Power Output Warranty' },
-        { name: 'UTL Fujiyama 150Ah Solar Tubular Battery', rate: 13200, cat: 'Battery', warranty: '60 Months Structural Replacement Warranty' },
-        { name: 'UTL Fujiyama 200Ah Solar High-Capacity', rate: 15900, cat: 'Battery', warranty: '60 Months Structural Replacement Warranty' }
+    // Updated Catalog Matrix Data Set with Dynamic Installation Matrix Row Entry
+    const freshDefaultCatalog = [
+        { name: 'UTL FUJIYAMA ON-GRID - 1KW', rate: 14200, cat: 'On-Grid', warranty: '10 Years System Warranty Architecture' },
+        { name: 'UTL FUJIYAMA ON-GRID - 2KW', rate: 14900, cat: 'On-Grid', warranty: '10 Years System Warranty Architecture' },
+        { name: 'UTL FUJIYAMA ON-GRID - 3KW', rate: 15510, cat: 'On-Grid', warranty: '10 Years System Warranty Architecture' },
+        { name: 'UTL FUJIYAMA ON-GRID - 3.3KW', rate: 15600, cat: 'On-Grid', warranty: '10 Years System Warranty Architecture' },
+        { name: 'UTL FUJIYAMA ON-GRID - 4KW', rate: 16700, cat: 'On-Grid', warranty: '10 Years System Warranty Architecture' },
+        { name: 'UTL FUJIYAMA ON-GRID - 5KW', rate: 24700, cat: 'On-Grid', warranty: '10 Years System Warranty Architecture' },
+        { name: 'UTL FUJIYAMA HYBRID - 3KW 24V', rate: 34900, cat: 'Hybrid', warranty: '5 Years Premium Hybrid Warranty protection' },
+        { name: 'UTL FUJIYAMA HYBRID - 3KW 48V', rate: 34500, cat: 'Hybrid', warranty: '5 Years Premium Hybrid Warranty protection' },
+        { name: 'UTL FUJIYAMA HYBRID - 5KW 48V', rate: 49000, cat: 'Hybrid', warranty: '5 Years Premium Hybrid Warranty protection' },
+        { name: 'UTL FUJIYAMA HYBRID - 7.5KW 48V', rate: 68200, cat: 'Hybrid', warranty: '5 Years Premium Hybrid Warranty protection' },
+        { name: 'UTL FUJIYAMA HYBRID - 10KW 48V', rate: 86500, cat: 'Hybrid', warranty: '5 Years Premium Hybrid Warranty protection' },
+        { name: 'UTL FUJIYAMA DCR PANEL - 530W', rate: 23.40, cat: 'Panel', warranty: '27 Years High Efficiency Linear Performance Warranty' },
+        { name: 'UTL FUJIYAMA NON DCR PANEL - 550W', rate: 14.50, cat: 'Panel', warranty: '27 Years High Efficiency Linear Performance Warranty' },
+        { name: 'UTL FUJIYAMA BATTERY - 200AH', rate: 13500, cat: 'Battery', warranty: '36 + 36 Months Split Structure Warranty Validation' },
+        { name: 'UTL FUJIYAMA INSTALLATION - PER WATT', rate: 7, cat: 'Installation', warranty: 'On-Site Structure Commissioning & Deployment Engineering' }
     ];
 
     function initApplicationState() {
-        const localData = localStorage.getItem('rr_utl_engine_products');
+        const localData = localStorage.getItem('rr_utl_engine_products_v3');
         if (localData) {
             masterProducts = JSON.parse(localData);
         } else {
-            masterProducts = [...fallbackDefaultCatalog];
-            localStorage.setItem('rr_utl_engine_products', JSON.stringify(masterProducts));
+            masterProducts = [...freshDefaultCatalog];
+            localStorage.setItem('rr_utl_engine_products_v3', JSON.stringify(masterProducts));
         }
 
-        // Initialize active selections counter flags object 
-        masterProducts.forEach((_, idx) => { activeQuantities[idx] = 0; });
+        masterProducts.forEach((_, idx) => { activeQuantities[idx] = activeQuantities[idx] || 0; });
         
-        // Push initial timestamp logging into invoice container layout 
         const d = new Date();
         document.getElementById('invoiceDateDisplay').innerText = `Date: ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
 
@@ -352,7 +373,19 @@
         if (tabId === 'quotation-tab') { calculateQuotation(); }
     }
 
-    // Touch and Add Card Grid View Generation System 
+    // Helper to scan active selections and compute the total selected raw wattage pool
+    function getAccumulatedPanelWattagePool() {
+        let cumulativeWattage = 0;
+        masterProducts.forEach((p, idx) => {
+            const qty = activeQuantities[idx] || 0;
+            if (p.cat === 'Panel' && qty > 0) {
+                const extractedWattage = p.name.includes('530W') ? 530 : 550;
+                cumulativeWattage += (qty * extractedWattage);
+            }
+        });
+        return cumulativeWattage;
+    }
+
     function renderProductCards() {
         const grid = document.getElementById('catalogCardsGrid');
         const query = document.getElementById('searchBar').value.toLowerCase();
@@ -364,16 +397,22 @@
             const statusClass = count > 0 ? 'has-qty' : '';
             const indicator = count > 0 ? `<span class="qty-indicator-pill">${count} Added</span>` : '';
 
+            let printedPriceString = `₹${p.rate.toLocaleString('en-IN')}`;
+            if (p.cat === 'Panel') printedPriceString = `₹${p.rate}/W Base`;
+            if (p.cat === 'Installation') printedPriceString = `₹${p.rate}/W Setup`;
+
+            const badgeStyleClass = p.cat === 'Installation' ? 'badge-srv' : 'badge-utl';
+
             return `
                 <div class="product-card ${statusClass}" onclick="incrementCardSelection(${idx})">
                     ${indicator}
                     <div>
-                        <span class="card-badge badge-utl">UTL FUJIYAMA</span>
+                        <span class="card-badge ${badgeStyleClass}">${p.cat.toUpperCase()}</span>
                         <div class="card-title">${p.name}</div>
-                        <div class="card-spec">⚡ Category: ${p.cat} <br>🛡️ ${p.warranty}</div>
+                        <div class="card-spec">🛡️ ${p.warranty}</div>
                     </div>
                     <div class="card-footer-row">
-                        <span class="card-price">₹${p.rate.toLocaleString('en-IN')}</span>
+                        <span class="card-price">${printedPriceString}</span>
                         <button class="add-icon-btn">+</button>
                     </div>
                 </div>
@@ -398,7 +437,6 @@
         calculateGlobalPurchaseCosts();
     }
 
-    // Displays breakdown summaries of clicked array nodes above the main product grid selection area
     function renderActiveCartDrawer() {
         const container = document.getElementById('cartDrawerSection');
         const listItemsContainer = document.getElementById('cartItemsContainer');
@@ -434,18 +472,30 @@
 
     function calculateGlobalPurchaseCosts() {
         let total = 0;
+        const computedPanelWattage = getAccumulatedPanelWattagePool();
+
         masterProducts.forEach((p, idx) => {
-            total += (activeQuantities[idx] || 0) * p.rate;
+            const qty = activeQuantities[idx] || 0;
+            if (qty > 0) {
+                if (p.cat === 'Panel') {
+                    const extractedWattage = p.name.includes('530W') ? 530 : 550;
+                    total += qty * p.rate * extractedWattage;
+                } else if (p.cat === 'Installation') {
+                    // System Calculation Rule Logic: Installation Rate * Panel Wattage Pool
+                    total += qty * p.rate * computedPanelWattage;
+                } else {
+                    total += qty * p.rate;
+                }
+            }
         });
-        document.getElementById('calcInternalTotal').innerText = '₹' + total.toLocaleString('en-IN');
+        document.getElementById('calcInternalTotal').innerText = '₹' + total.toLocaleString('en-IN', {maximumFractionDigits: 0});
     }
 
-    // Compiles information safely down to output receipt blocks removing core margin data tracking fields 
     function calculateQuotation() {
         const clientNameInputValue = document.getElementById('customerNameInput').value.trim();
         const targetedMarkupMarginPercent = parseFloat(document.getElementById('marginInput').value) || 0;
+        const totalSystemWattageArrayPool = getAccumulatedPanelWattagePool();
 
-        // Sync Customer Identity presentation string elements safely 
         document.getElementById('billClientName').innerText = clientNameInputValue || "Valued Customer / RR Traders Partner";
 
         let aggregatedBaseProcurementCostValue = 0;
@@ -455,23 +505,35 @@
         masterProducts.forEach((p, idx) => {
             const currentUnitsSelectedQtyCount = activeQuantities[idx] || 0;
             if (currentUnitsSelectedQtyCount > 0) {
-                const subCostBase = currentUnitsSelectedQtyCount * p.rate;
+                let subCostBase = 0;
+                let calculationDetailLabelString = `Quantity Matrix: ${currentUnitsSelectedQtyCount} Unit(s)`;
+
+                if (p.cat === 'Panel') {
+                    const extractedWattage = p.name.includes('530W') ? 530 : 550;
+                    subCostBase = currentUnitsSelectedQtyCount * p.rate * extractedWattage;
+                    calculationDetailLabelString = `Quantity Matrix: ${currentUnitsSelectedQtyCount} Panel(s) [Total ${currentUnitsSelectedQtyCount * extractedWattage} Watts]`;
+                } else if (p.cat === 'Installation') {
+                    // Apply explicit installation evaluation logic 
+                    subCostBase = currentUnitsSelectedQtyCount * p.rate * totalSystemWattageArrayPool;
+                    calculationDetailLabelString = `Formula Matrix: ₹${p.rate} * ${totalSystemWattageArrayPool} Total Watts * ${currentUnitsSelectedQtyCount} Site Run(s)`;
+                } else {
+                    subCostBase = currentUnitsSelectedQtyCount * p.rate;
+                }
+
                 aggregatedBaseProcurementCostValue += subCostBase;
 
-                // Derive absolute dynamic margin overhead calculations securely inline per line entry element
                 const totalCalculatedCustomerFacePrice = subCostBase * (1 + (targetedMarkupMarginPercent / 100));
 
                 customerItemsListingRowHtmlStrings += `
                     <div class="bill-row" style="padding: 10px 12px; background: #ffffff;">
                         <div>
                             <span style="font-weight: 800; color: #0f172a; font-size: 0.95rem;">${p.name}</span> <br>
-                            <span style="font-size: 0.78rem; color: #475569; font-weight: 700;">Volume Allocation: ${currentUnitsSelectedQtyCount} Unit(s)</span>
+                            <span style="font-size: 0.78rem; color: #475569; font-weight: 700;">${calculationDetailLabelString}</span>
                         </div>
                         <span style="font-weight: 800; color: #0f172a; font-size: 1.05rem;">₹${totalCalculatedCustomerFacePrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                     </div>
                 `;
 
-                // Aggregate and push unique active warranties into array matrix safely
                 const structuredWarrantyPillTextLine = `<strong>${p.name}:</strong> ${p.warranty}`;
                 if (!uniqueWarrantyBulletStringsArray.includes(structuredWarrantyPillTextLine)) {
                     uniqueWarrantyBulletStringsArray.push(structuredWarrantyPillTextLine);
@@ -481,11 +543,9 @@
 
         const ultimateCustomerCalculatedNetSummaryPrice = aggregatedBaseProcurementCostValue * (1 + (targetedMarkupMarginPercent / 100));
 
-        // Sync top calculation review badges metrics visible only on configuration views 
-        document.getElementById('quoteBaseCost').innerText = '₹' + aggregatedBaseProcurementCostValue.toLocaleString('en-IN');
+        document.getElementById('quoteBaseCost').innerText = '₹' + aggregatedBaseProcurementCostValue.toLocaleString('en-IN', { maximumFractionDigits: 0 });
         document.getElementById('quoteGrandTotal').innerText = '₹' + ultimateCustomerCalculatedNetSummaryPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 });
 
-        // Populate deep structural client billing receipt content frames 
         const itemsBoxFrame = document.getElementById('invoiceItemsContainer');
         if (customerItemsListingRowHtmlStrings) {
             itemsBoxFrame.innerHTML = customerItemsListingRowHtmlStrings;
@@ -495,7 +555,6 @@
 
         document.getElementById('invoiceGrandTotal').innerText = '₹' + ultimateCustomerCalculatedNetSummaryPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 });
 
-        // Build warranty documentation lines inside the hidden print zone element cleanly
         const warrantyListContainerElement = document.getElementById('invoiceWarrantyList');
         if (uniqueWarrantyBulletStringsArray.length > 0) {
             warrantyListContainerElement.innerHTML = uniqueWarrantyBulletStringsArray.map(lineItemText => `<li style="margin-bottom: 4px;">${lineItemText}</li>`).join('');
@@ -512,7 +571,7 @@
             <tr>
                 <td style="font-weight: 700; color: var(--text-main); font-size: 0.9rem;">${p.name}</td>
                 <td>
-                    <input type="number" class="rate-input-field-element" style="max-width: 180px; padding: 0.5rem;" value="${p.rate}" id="admin-rate-cell-node-${idx}">
+                    <input type="number" step="any" class="rate-input-field-element" style="max-width: 150px; padding: 0.5rem;" value="${p.rate}" id="admin-rate-cell-node-${idx}">
                 </td>
             </tr>
         `).join('');
@@ -522,29 +581,27 @@
         masterProducts.forEach((_, idx) => {
             const inputFieldReference = document.getElementById(`admin-rate-cell-node-${idx}`);
             if (inputFieldReference) {
-                masterProducts[idx].rate = parseInt(inputFieldReference.value) || 0;
+                masterProducts[idx].rate = parseFloat(inputFieldReference.value) || 0;
             }
         });
-        localStorage.setItem('rr_utl_engine_products', JSON.stringify(masterProducts));
+        localStorage.setItem('rr_utl_engine_products_v3', JSON.stringify(masterProducts));
         calculateGlobalPurchaseCosts();
-        alert('UTL Master Price Index successfully updated.');
+        alert('UTL & Service Pricing Matrices successfully synchronized.');
         switchTab('calculator-tab', document.querySelectorAll('.tab-btn')[0]);
+        renderProductCards();
     }
 
     function exportQuotationAsImage() {
         const invoiceDOMTargetNode = document.getElementById('customerInvoiceElement');
-        
-        // Remove modern UI tracking shadow properties during capture pass to clean rendering anomalies
         invoiceDOMTargetNode.style.boxShadow = 'none';
         invoiceDOMTargetNode.style.border = '1px solid #1e293b';
 
         html2canvas(invoiceDOMTargetNode, {
-            scale: 2, // Multi-sampling factor eliminates text smoothing blurring variants on mobile phones
+            scale: 2, 
             useCORS: true,
             backgroundColor: '#ffffff',
             logging: false
         }).then(canvasOutputInstance => {
-            // Re-apply operational UI viewport styles instantly
             invoiceDOMTargetNode.style.boxShadow = '';
             invoiceDOMTargetNode.style.border = '';
 
@@ -554,7 +611,7 @@
             executionDownloadLinkElement.href = canvasOutputInstance.toDataURL('image/png');
             executionDownloadLinkElement.click();
         }).catch(err => {
-            alert('Hardware acceleration capture context fault.');
+            alert('Hardware acceleration capture fault.');
             console.error(err);
         });
     }
