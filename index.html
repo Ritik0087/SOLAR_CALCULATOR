@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RR Traders - Procurement Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 150px; height: 150px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .sticky-summary {
+            position: sticky;
+            top: 1rem;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .summary-info h2 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 1px;
+        }
+
+        .summary-info .total-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #475569;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .qty-input {
+            width: 80px;
+            padding: 0.4rem;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-ongrid { background: #e0f2fe; color: #0369a1; }
+        .badge-hybrid { background: #faf5ff; color: #7e22ce; }
+        .badge-panel { background: #f0fdf4; color: #15803d; }
+        .badge-battery { background: #fff7ed; color: #c2410c; }
+
+        @media(max-width: 768px) {
+            .controls { grid-template-columns: 1fr; }
+            .sticky-summary { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>RR TRADERS</h1>
+        <p>Internal Procurement & Base Purchase Rate List</p>
+    </header>
+
+    <div class="sticky-summary">
+        <div class="summary-info">
+            <h2>Estimated Batch Procurement Cost</h2>
+            <div class="total-price" id="grandTotal">₹0.00</div>
+        </div>
+        <div style="color: #64748b; font-size: 0.9rem; text-align: right;" id="itemCount">
+            0 Items Selected
+        </div>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="searchBar" placeholder="Search models or ratings (e.g., 3KW, 530W)..." oninput="filterProducts()">
+        <select id="categoryFilter" onchange="filterProducts()">
+            <option value="all">All Categories</option>
+            <option value="On-Grid">On-Grid Inverters</option>
+            <option value="Hybrid">Hybrid Inverters</option>
+            <option value="Panels">Solar Panels</option>
+            <option value="Batteries">Batteries</option>
+        </select>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Model / Rating</th>
+                    <th>Base Rate</th>
+                    <th>Warranty Structure</th>
+                    <th style="width: 120px;">Qty Required</th>
+                    <th style="text-align: right;">Total Cost</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- Injected via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const products = [
+        { cat: 'On-Grid', type: 'badge-ongrid', name: '1 KW Inverter', rate: 14200, spec: '10 Years Full Warranty' },
+        { cat: 'On-Grid', type: 'badge-ongrid', name: '2 KW Inverter', rate: 14900, spec: '10 Years Full Warranty' },
+        { cat: 'On-Grid', type: 'badge-ongrid', name: '3 KW Inverter', rate: 15510, spec: '10 Years Full Warranty' },
+        { cat: 'On-Grid', type: 'badge-ongrid', name: '3.3 KW Inverter', rate: 15600, spec: '10 Years Full Warranty' },
+        { cat: 'On-Grid', type: 'badge-ongrid', name: '4 KW Inverter', rate: 16700, spec: '10 Years Full Warranty' },
+        { cat: 'On-Grid', type: 'badge-ongrid', name: '5 KW Inverter', rate: 24700, spec: '10 Years Full Warranty' },
+        { cat: 'Hybrid', type: 'badge-hybrid', name: '3 KW Inverter (24V)', rate: 34900, spec: '5 Years Warranty' },
+        { cat: 'Hybrid', type: 'badge-hybrid', name: '3 KW Inverter (48V)', rate: 34500, spec: '5 Years Warranty' },
+        { cat: 'Hybrid', type: 'badge-hybrid', name: '5 KW Inverter (48V)', rate: 49000, spec: '5 Years Warranty' },
+        { cat: 'Hybrid', type: 'badge-hybrid', name: '7.5 KW Inverter (48V)', rate: 68200, spec: '5 Years Warranty' },
+        { cat: 'Hybrid', type: 'badge-hybrid', name: '10 KW Inverter (48V)', rate: 86500, spec: '5 Years Warranty' },
+        { cat: 'Panels', type: 'badge-panel', name: 'DCR Panel 530W', rate: 12402, spec: '₹23.40/W | 27Y Perf. Warranty' },
+        { cat: 'Panels', type: 'badge-panel', name: 'Non-DCR Panel 550W', rate: 7975, spec: '₹14.50/W | 27Y Perf. Warranty' },
+        { cat: 'Batteries', type: 'badge-battery', name: 'Solar Battery 200Ah', rate: 13500, spec: '36 + 36 Months Warranty' }
+    ];
+
+    function renderTable(data) {
+        const tbody = document.getElementById('productTableBody');
+        tbody.innerHTML = data.map((p, index) => `
+            <tr data-category="${p.cat}">
+                <td><span class="badge ${p.type}">${p.cat}</span></td>
+                <td style="font-weight:600;">${p.name}</td>
+                <td>₹${p.rate.toLocaleString('en-IN')}</td>
+                <td style="color:#64748b; font-size:0.85rem;">${p.spec}</td>
+                <td><input type="number" class="qty-input" min="0" value="0" data-index="${index}" oninput="calculateTotal()"></td>
+                <td style="text-align: right; font-weight:600;" id="total-${index}">₹0</td>
+            </tr>
+        `).join('');
+    }
+
+    function filterProducts() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const selectedCat = document.getElementById('categoryFilter').value;
+
+        const filtered = products.filter(p => {
+            const matchesSearch = p.name.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query);
+            const matchesCat = selectedCat === 'all' || p.cat === selectedCat;
+            return matchesSearch && matchesCat;
+        });
+        
+        renderTable(filtered);
+        calculateTotal(); // Reset totals for filtered views seamlessly
+    }
+
+    function calculateTotal() {
+        let grandTotal = 0;
+        let count = 0;
+        const inputs = document.querySelectorAll('.qty-input');
+        
+        inputs.forEach(input => {
+            const index = input.getAttribute('data-index');
+            const qty = parseInt(input.value) || 0;
+            if(qty > 0) {
+                const itemTotal = qty * products[index].rate;
+                grandTotal += itemTotal;
+                count += qty;
+                document.getElementById(`total-${index}`).innerText = '₹' + itemTotal.toLocaleString('en-IN');
+            } else {
+                document.getElementById(`total-${index}`).innerText = '₹0';
+            }
+        });
+
+        document.getElementById('grandTotal').innerText = '₹' + grandTotal.toLocaleString('en-IN');
+        document.getElementById('itemCount').innerText = `${count} Units Selected`;
+    }
+
+    // Initial load
+    renderTable(products);
+</script>
+</body>
+</html>
