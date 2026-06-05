@@ -67,6 +67,10 @@
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
         /* Dashboard Overview Grid */
         .summary-grid {
@@ -321,25 +325,34 @@
 </div>
 
 <script>
-    // HARDWARE DATA REGISTRY (DCR, NON-DCR, & HYBRID Track Master Array)
-    const masterProducts = [
-        // DCR METRIC ARRAY
-        { name: 'UTL FUJIYAMA ON GRID 1KW DCR', panelCost: 25440, panelLabel: '530W (1060W)', inverterCost: 16000, inverterLabel: '1KW', exactWatts: 1060, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 70, dealerPricePerWatt: 60, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 2KW DCR', panelCost: 50880, panelLabel: '530W × 4 (2120W)', inverterCost: 28000, inverterLabel: '2KW', exactWatts: 2120, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 68, dealerPricePerWatt: 58, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 3KW DCR', panelCost: 76320, panelLabel: '530W × 6 (3180W)', inverterCost: 38000, inverterLabel: '3KW', exactWatts: 3180, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 65, dealerPricePerWatt: 55, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 4KW DCR', panelCost: 101760, panelLabel: '530W × 8 (4240W)', inverterCost: 46000, inverterLabel: '4KW', exactWatts: 4240, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 63, dealerPricePerWatt: 53, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 5KW DCR', panelCost: 127200, panelLabel: '530W × 10 (5300W)', inverterCost: 54000, inverterLabel: '5KW', exactWatts: 5300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 62, dealerPricePerWatt: 52, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 10KW DCR', panelCost: 254400, panelLabel: '530W × 20 (10600W)', inverterCost: 95000, inverterLabel: '10KW', exactWatts: 10600, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 60, dealerPricePerWatt: 50, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        
-        // NON-DCR METRIC ARRAY
-        { name: 'UTL FUJIYAMA ON GRID 1KW NON DCR', panelCost: 22000, panelLabel: '550W (1100W)', inverterCost: 15000, inverterLabel: '1KW', exactWatts: 1100, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 65, dealerPricePerWatt: 55, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 2KW NON DCR', panelCost: 44000, panelLabel: '550W × 4 (2200W)', inverterCost: 26000, inverterLabel: '2KW', exactWatts: 2200, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 63, dealerPricePerWatt: 53, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 3KW NON DCR', panelCost: 66000, panelLabel: '550W × 6 (3300W)', inverterCost: 35000, inverterLabel: '3KW', exactWatts: 3300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 60, dealerPricePerWatt: 50, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 4KW NON DCR', panelCost: 88000, panelLabel: '550W × 8 (4400W)', inverterCost: 42000, inverterLabel: '4KW', exactWatts: 4400, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 59, dealerPricePerWatt: 49, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 5KW NON DCR', panelCost: 110000, panelLabel: '550W × 10 (5500W)', inverterCost: 50000, inverterLabel: '5KW', exactWatts: 5500, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 58, dealerPricePerWatt: 48, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
-        { name: 'UTL FUJIYAMA ON GRID 10KW NON DCR', panelCost: 220000, panelLabel: '550W × 20 (11000W)', inverterCost: 88000, inverterLabel: '10KW', exactWatts: 11000, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 56, dealerPricePerWatt: 46, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard' },
+    // ============================================================
+    // GOOGLE SHEETS CONFIG
+    // Step 1: Paste your Google Sheet ID below (the long string in the URL)
+    // Step 2: Make your sheet publicly visible (Share → Anyone with the link → Viewer)
+    // Step 3: The sheet must have a tab named "Products" with columns in this order:
+    //   A=name, B=panelCost, C=panelLabel, D=inverterCost, E=inverterLabel,
+    //   F=exactWatts, G=laborPerWatt, H=fileCharge, I=retailPricePerWatt,
+    //   J=dealerPricePerWatt, K=batteryCost, L=batteryLabel, M=batteryCount,
+    //   N=panelWarranty, O=inverterWarranty, P=batteryWarranty
+    //   (Row 1 = headers, data starts from Row 2)
+    // ============================================================
+    const SHEET_ID = '1N00zOdkrC-_cX_7FtUkuqV2---lvhDN_bkqQ6RcRi3Q'; // <-- REPLACE THIS
+    const SHEET_TAB = 'Products';
 
-        // HYBRID WITH 200AH BATTERY MATRIX TRACKS
+    // FALLBACK DATA (used when Sheet ID is not set or fetch fails)
+    const FALLBACK_PRODUCTS = [
+        { name: 'UTL FUJIYAMA ON GRID 1KW DCR', panelCost: 25440, panelLabel: '530W (1060W)', inverterCost: 16000, inverterLabel: '1KW', exactWatts: 1060, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 70, dealerPricePerWatt: 60, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 2KW DCR', panelCost: 50880, panelLabel: '530W × 4 (2120W)', inverterCost: 28000, inverterLabel: '2KW', exactWatts: 2120, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 68, dealerPricePerWatt: 58, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 3KW DCR', panelCost: 76320, panelLabel: '530W × 6 (3180W)', inverterCost: 38000, inverterLabel: '3KW', exactWatts: 3180, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 65, dealerPricePerWatt: 55, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 4KW DCR', panelCost: 101760, panelLabel: '530W × 8 (4240W)', inverterCost: 46000, inverterLabel: '4KW', exactWatts: 4240, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 63, dealerPricePerWatt: 53, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 5KW DCR', panelCost: 127200, panelLabel: '530W × 10 (5300W)', inverterCost: 54000, inverterLabel: '5KW', exactWatts: 5300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 62, dealerPricePerWatt: 52, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 10KW DCR', panelCost: 254400, panelLabel: '530W × 20 (10600W)', inverterCost: 95000, inverterLabel: '10KW', exactWatts: 10600, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 60, dealerPricePerWatt: 50, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 1KW NON DCR', panelCost: 22000, panelLabel: '550W (1100W)', inverterCost: 15000, inverterLabel: '1KW', exactWatts: 1100, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 65, dealerPricePerWatt: 55, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 2KW NON DCR', panelCost: 44000, panelLabel: '550W × 4 (2200W)', inverterCost: 26000, inverterLabel: '2KW', exactWatts: 2200, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 63, dealerPricePerWatt: 53, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 3KW NON DCR', panelCost: 66000, panelLabel: '550W × 6 (3300W)', inverterCost: 35000, inverterLabel: '3KW', exactWatts: 3300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 60, dealerPricePerWatt: 50, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 4KW NON DCR', panelCost: 88000, panelLabel: '550W × 8 (4400W)', inverterCost: 42000, inverterLabel: '4KW', exactWatts: 4400, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 59, dealerPricePerWatt: 49, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 5KW NON DCR', panelCost: 110000, panelLabel: '550W × 10 (5500W)', inverterCost: 50000, inverterLabel: '5KW', exactWatts: 5500, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 58, dealerPricePerWatt: 48, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
+        { name: 'UTL FUJIYAMA ON GRID 10KW NON DCR', panelCost: 220000, panelLabel: '550W × 20 (11000W)', inverterCost: 88000, inverterLabel: '10KW', exactWatts: 11000, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 56, dealerPricePerWatt: 46, batteryCost: 0, batteryLabel: 'N/A', batteryCount: 0, panelWarranty: '25 Years Performance', inverterWarranty: '5 Years Standard', batteryWarranty: '' },
         { name: 'UTL FUJIYAMA HYBRID 3KW 24V', panelCost: 72000, panelLabel: '530W × 6 (3180W)', inverterCost: 45000, inverterLabel: '3KW 24V Hybrid', exactWatts: 3180, laborPerWatt: 8, fileCharge: 6000, retailPricePerWatt: 85, dealerPricePerWatt: 75, batteryCost: 30000, batteryLabel: '200Ah Battery Stack', batteryCount: 2, panelWarranty: '25 Years Performance', inverterWarranty: '2 Years Standard', batteryWarranty: '5 Years Replacement' },
         { name: 'UTL FUJIYAMA HYBRID 3KW 48V', panelCost: 72000, panelLabel: '530W × 6 (3180W)', inverterCost: 48000, inverterLabel: '3KW 48V Hybrid', exactWatts: 3180, laborPerWatt: 8, fileCharge: 6000, retailPricePerWatt: 88, dealerPricePerWatt: 78, batteryCost: 60000, batteryLabel: '200Ah Battery Stack', batteryCount: 4, panelWarranty: '25 Years Performance', inverterWarranty: '2 Years Standard', batteryWarranty: '5 Years Replacement' },
         { name: 'UTL FUJIYAMA HYBRID 5KW 48V', panelCost: 120000, panelLabel: '530W × 10 (5300W)', inverterCost: 68000, inverterLabel: '5KW 48V Hybrid', exactWatts: 5300, laborPerWatt: 8, fileCharge: 6000, retailPricePerWatt: 84, dealerPricePerWatt: 74, batteryCost: 60000, batteryLabel: '200Ah Battery Stack', batteryCount: 4, panelWarranty: '25 Years Performance', inverterWarranty: '2 Years Standard', batteryWarranty: '5 Years Replacement' },
@@ -347,18 +360,111 @@
         { name: 'UTL FUJIYAMA HYBRID 10KW 120V', panelCost: 240000, panelLabel: '530W × 20 (10600W)', inverterCost: 135000, inverterLabel: '10KW 120V Hybrid', exactWatts: 10600, laborPerWatt: 8, fileCharge: 6000, retailPricePerWatt: 80, dealerPricePerWatt: 70, batteryCost: 150000, batteryLabel: '200Ah Battery Stack', batteryCount: 10, panelWarranty: '25 Years Performance', inverterWarranty: '2 Years Standard', batteryWarranty: '5 Years Replacement' }
     ];
 
+    let masterProducts = [];
     let currentQuantities = {};
     let selectedTiers = {};
     let activeClassFilter = 'ALL';
 
-    function initData() {
-        masterProducts.forEach((p, idx) => { 
-            currentQuantities[idx] = 0; 
-            selectedTiers[idx] = 'retail';
-        });
-        
+    // Parse a row from the Google Sheets JSON API into a product object
+    function parseSheetRow(row) {
+        const c = row.c;
+        const str = (i) => (c[i] && c[i].v != null) ? String(c[i].v).trim() : '';
+        const num = (i) => (c[i] && c[i].v != null) ? parseFloat(c[i].v) || 0 : 0;
+        return {
+            name:               str(0),
+            panelCost:          num(1),
+            panelLabel:         str(2),
+            inverterCost:       num(3),
+            inverterLabel:      str(4),
+            exactWatts:         num(5),
+            laborPerWatt:       num(6),
+            fileCharge:         num(7),
+            retailPricePerWatt: num(8),
+            dealerPricePerWatt: num(9),
+            batteryCost:        num(10),
+            batteryLabel:       str(11),
+            batteryCount:       num(12),
+            panelWarranty:      str(13),
+            inverterWarranty:   str(14),
+            batteryWarranty:    str(15),
+        };
+    }
+
+    function showLoadingState(msg) {
+        const container = document.getElementById('productsGridContainer');
+        if (container) container.innerHTML = `
+            <div style="text-align:center; padding: 3rem 1rem; color: #64748b;">
+                <div style="font-size: 2rem; margin-bottom: 0.75rem; animation: spin 1.2s linear infinite; display:inline-block;">⚙️</div>
+                <div style="font-weight: 700; font-size: 1rem;">${msg}</div>
+            </div>`;
+    }
+
+    function showDataSourceBanner(source) {
+        const header = document.querySelector('header');
+        let existing = document.getElementById('data-source-banner');
+        if (existing) existing.remove();
+        const banner = document.createElement('div');
+        banner.id = 'data-source-banner';
+        const isSheet = source === 'sheet';
+        banner.style.cssText = `
+            background: ${isSheet ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'};
+            border: 1px solid ${isSheet ? '#10b981' : '#f59e0b'};
+            color: ${isSheet ? '#065f46' : '#78350f'};
+            padding: 0.5rem 1.25rem; border-radius: 8px;
+            font-size: 0.8rem; font-weight: 700;
+            display: flex; align-items: center; gap: 6px;
+            margin-top: 1.5rem; width: fit-content;
+        `;
+        banner.innerHTML = isSheet
+            ? '✅ Live data loaded from Google Sheets'
+            : '⚠️ Using built-in fallback data — connect your Google Sheet to update prices live';
+        document.querySelector('.container').insertBefore(banner, document.querySelector('.tabs-nav'));
+    }
+
+    async function fetchSheetProducts() {
+        // If no Sheet ID configured, use fallback immediately
+        if (!SHEET_ID || SHEET_ID === 'YOUR_GOOGLE_SHEET_ID_HERE') {
+            return null;
+        }
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('Network error');
+            const text = await res.text();
+            // Google wraps response in: google.visualization.Query.setResponse({...});
+            const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)[1]);
+            const rows = json.table.rows;
+            // Skip header row (row 0) — Google Sheets API already excludes it when headers are detected
+            const products = rows
+                .map(row => parseSheetRow(row))
+                .filter(p => p.name && p.exactWatts > 0); // skip blank rows
+            return products.length > 0 ? products : null;
+        } catch (e) {
+            console.warn('Google Sheets fetch failed:', e);
+            return null;
+        }
+    }
+
+    async function initData() {
+        showLoadingState('Loading product data...');
+
         const today = new Date();
         document.getElementById('invoiceDateDisplay').innerText = `Date: ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
+
+        const sheetProducts = await fetchSheetProducts();
+        if (sheetProducts) {
+            masterProducts = sheetProducts;
+            showDataSourceBanner('sheet');
+        } else {
+            masterProducts = FALLBACK_PRODUCTS;
+            showDataSourceBanner('fallback');
+        }
+
+        masterProducts.forEach((p, idx) => {
+            currentQuantities[idx] = 0;
+            selectedTiers[idx] = 'retail';
+        });
+
         renderProductCards();
         renderPriceEditorPanel();
         evaluateGlobalTotals();
@@ -400,11 +506,11 @@
         const dealerBtn = document.getElementById(`btn-dealer-${idx}`);
         
         if (tierToken === 'retail') {
-            if (retailBtn) retailBtn.classList.add('active-retail');
-            if (dealerBtn) retailBtn.classList.remove('active-dealer');
+            if (retailBtn) { retailBtn.classList.add('active-retail'); retailBtn.classList.remove('active-dealer'); }
+            if (dealerBtn) { dealerBtn.classList.remove('active-dealer'); dealerBtn.classList.remove('active-retail'); }
         } else {
-            if (retailBtn) retailBtn.classList.remove('active-retail');
-            if (dealerBtn) dealerBtn.classList.add('active-dealer');
+            if (dealerBtn) { dealerBtn.classList.add('active-dealer'); dealerBtn.classList.remove('active-retail'); }
+            if (retailBtn) { retailBtn.classList.remove('active-retail'); retailBtn.classList.remove('active-dealer'); }
         }
         
         const activeCost = calculateSystemActiveRate(masterProducts[idx], idx);
