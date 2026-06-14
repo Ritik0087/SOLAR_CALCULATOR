@@ -1,726 +1,656 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RR Traders | Premium Solar Studio</title>
-    <!-- html2canvas library for high-resolution client-side image exporting -->
+    <title>RR TRADERS - Management Suite v5.0</title>
+    <!-- Premium Google Fonts Workspace -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=Space+Grotesk:wght=500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Script Wrapper -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Premium Image Render Engine Script Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
-        :root {
-            --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            --primary: #0f172a;
-            --accent: #f59e0b;
-            --bg: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --retail-blue: #3b82f6;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
-        }
+        /* Force manual inline variant rule to fix Tailwind v4 engine compilation gaps */
+        @custom-variant dark (&:where(.dark, .dark *));
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding: 1rem; min-height: 100vh; }
-        .container { max-width: 1400px; margin: 0 auto; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
         
-        /* Modern Gradient Header */
-        header {
-            background: var(--brand-gradient); color: white; padding: 2rem;
-            border-radius: var(--radius-lg); margin-bottom: 2rem;
-            display: flex; flex-direction: column; gap: 0.5rem;
-            box-shadow: var(--shadow-md); position: relative; overflow: hidden;
-        }
-        header::before {
-            content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px;
-            background: rgba(255, 255, 255, 0.05); border-radius: 50%; pointer-events: none;
-        }
-        @media(min-width: 768px) {
-            body { padding: 2.5rem 1.5rem; }
-            header { padding: 2.5rem; flex-direction: row; justify-content: space-between; align-items: center; }
-        }
-        header h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.5px; }
-        header p { color: #e0e7ff; font-size: 1rem; opacity: 0.9; margin-top: 0.2rem; }
-
-        /* Sleek Pills Navigation */
-        .tabs-nav {
-            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;
-            background: #e2e8f0; padding: 0.5rem; border-radius: var(--radius-md);
-            width: fit-content;
-        }
-        .tab-btn {
-            padding: 0.75rem 1.5rem; border: none; background: transparent;
-            font-size: 0.95rem; font-weight: 700; color: #475569; cursor: pointer;
-            border-radius: 8px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;
-        }
-        .tab-btn:hover { color: var(--primary); }
-        .tab-btn.active { background: var(--card-bg); color: #4f46e5; box-shadow: var(--shadow-sm); }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Dashboard Overview Grid */
-        .summary-grid {
-            display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;
-        }
-        @media(min-width: 768px) {
-            .summary-grid { grid-template-columns: 1fr 1fr; }
-        }
-        .dash-card {
-            background: var(--card-bg); padding: 1.5rem; border-radius: var(--radius-lg);
-            border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: var(--shadow-sm);
-            transition: transform 0.2s;
-        }
-        .dash-card:hover { transform: translateY(-2px); }
-        .dash-card.accent-border { border-left: 6px solid #4f46e5; }
-        .dash-card.success-border { border-left: 6px solid var(--success); }
-        .dash-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.75px; font-weight: 700; }
-        .dash-val { font-size: 2rem; font-weight: 900; color: var(--primary); margin-top: 0.4rem; letter-spacing: -0.5px; }
-        .dash-sub { font-size: 0.88rem; color: var(--text-muted); margin-top: 0.4rem; }
-
-        /* Modern Text Inputs styling */
-        .input-block-row { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-        @media(min-width: 768px) { .input-block-row { flex-direction: row; } }
+        /* Minimalist Micro-interactions */
+        .ecommerce-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .ecommerce-card:hover { transform: translateY(-4px); }
         
-        .input-wrap { flex: 1; min-width: 140px; }
-        .input-wrap label { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        input {
-            width: 100%; padding: 0.9rem 1.15rem;
-            border: 2px solid var(--border); border-radius: var(--radius-md);
-            font-size: 0.95rem; background: var(--card-bg); outline: none;
-            transition: all 0.2s; box-shadow: var(--shadow-sm); font-weight: 600;
+        @keyframes slideIn {
+            from { transform: translateY(1rem) scale(0.98); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
-        input:focus { border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        .animate-slide-in { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Rapid Classification Filter Row */
-        .filter-ribbon {
-            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; background: #e2e8f0; padding: 6px; border-radius: var(--radius-md); width: fit-content;
+        /* Custom Scrollbar for Horizontal Touch Tabs */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Print Layout Rules */
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            #tab-quotation-content { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+            #tab-catalog-content, #tab-builder-content { display: none !important; }
         }
-        .filter-pill-btn {
-            padding: 0.5rem 1.25rem; border: none; font-size: 0.85rem; font-weight: 800; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569;
-        }
-        .filter-pill-btn.active-pill { background: var(--card-bg); color: var(--primary); box-shadow: var(--shadow-sm); }
-
-        /* High-Fidelity Wide Rows Layout */
-        .products-grid { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
-
-        .product-card {
-            background: var(--card-bg); border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column;
-            gap: 1.25rem; box-shadow: var(--shadow-sm); transition: all 0.2s;
-        }
-        .product-card:hover { box-shadow: var(--shadow-md); border-color: #cbd5e1; }
-        
-        @media(min-width: 1150px) {
-            .product-card { flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; }
-        }
-
-        .card-main-info { flex: 2; min-width: 320px; }
-        .prod-title { font-size: 1.25rem; font-weight: 850; color: var(--primary); letter-spacing: -0.3px; }
-        
-        .inline-specs-strip { display: flex; flex-wrap: wrap; gap: 1.25rem; row-gap: 0.4rem; font-size: 0.88rem; color: #475569; margin-top: 0.5rem; }
-        .inline-specs-strip span { background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #f1f5f9; }
-        .inline-specs-strip span strong { color: #1e293b; font-weight: 700; }
-
-        /* Modern Segmented Controls */
-        .tier-toggle-container {
-            display: flex; gap: 0.25rem; background: #f1f5f9; padding: 0.35rem; border-radius: var(--radius-md); border: 1px solid var(--border);
-            min-width: 310px; justify-content: space-between;
-        }
-        .toggle-btn {
-            border: none; flex: 1; padding: 0.65rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 800; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748b;
-        }
-        .toggle-btn.active-retail { background: var(--retail-blue); color: white; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
-        .toggle-btn.active-dealer { background: var(--success); color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-
-        .card-pricing-block { text-align: right; min-width: 150px; }
-        .price-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .price-display { font-size: 1.5rem; font-weight: 900; color: #4f46e5; letter-spacing: -0.5px; margin-top: 2px; }
-
-        .card-action-row { display: flex; align-items: center; gap: 1.5rem; justify-content: space-between; }
-        @media(min-width: 1150px) { .card-action-row { justify-content: flex-end; } }
-
-        /* Quantity Incrementor */
-        .qty-box { display: flex; align-items: center; gap: 0.5rem; background: #f8fafc; padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border); }
-        .qty-btn { width: 36px; height: 36px; border-radius: 8px; border: none; background: #fff; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: var(--shadow-sm); color: var(--primary); transition: background 0.2s; }
-        .qty-btn:hover { background: #f1f5f9; color: #4f46e5; }
-        .qty-num { font-size: 1.2rem; font-weight: 800; width: 36px; text-align: center; color: var(--primary); }
-
-        /* Invoice Layout Customizations */
-        .invoice-wrapper { width: 100%; max-width: 650px; margin: 0 auto 3rem auto; overflow-x: auto; padding: 5px; }
-        .quote-bill-box {
-            background: #ffffff; border: 1px solid #cbd5e1; padding: 2.5rem; border-radius: 0px;
-            width: 100%; min-width: 550px; box-shadow: var(--shadow-md);
-        }
-        .bill-row { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.98rem; align-items: center; }
-        .bill-row.total-row { border-top: 3px solid var(--primary); border-bottom: 5px double var(--primary); font-weight: 900; font-size: 1.6rem; color: var(--primary); margin-top: 2rem; padding-top: 1.25rem; }
-        
-        .action-btn {
-            background: var(--brand-gradient); color: white; border: none; padding: 0.85rem 2rem;
-            border-radius: var(--radius-md); font-weight: 800; cursor: pointer; transition: all 0.25s;
-            display: inline-flex; align-items: center; gap: 0.75rem; justify-content: center; width: 100%; max-width: 320px;
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
-        }
-        .action-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35); }
-
-        /* Price Editor Grid Form Layouts */
-        .editor-container { background: var(--card-bg); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-        .editor-row { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 2rem; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
-        .editor-grid-block { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-top: 1rem; }
-        .editor-title-block { font-size: 1.25rem; font-weight: 850; color: var(--primary); }
-        .editor-section-title { font-size: 0.85rem; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-
-        /* Quotation Description Styling Extension */
-        .quote-item-details { background: #f8fafc; padding: 10px 14px; margin-top: 6px; border-radius: 6px; border-left: 3px solid #7c3aed; font-size: 0.85rem; color: #475569; }
-        .quote-detail-line { margin-bottom: 3px; display: flex; justify-content: space-between; }
-        .quote-detail-line:last-child { margin-bottom: 0; }
-        .quote-detail-line strong { color: #1e293b; }
     </style>
 </head>
-<body>
+<body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen antialiased flex flex-col transition-colors duration-300">
 
-<div class="container">
-    <header>
-        <div>
-            <h1>RR TRADERS</h1>
-            <p>Premium Digital Solar Matrix Studio</p>
+    <!-- TOAST NOTIFICATION CONTAINER MOUNT -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+    <!-- MAIN APP NAVIGATION BAR -->
+    <header class="bg-white/90 dark:bg-slate-950/90 border-b border-slate-100 dark:border-slate-900 sticky top-0 z-40 no-print backdrop-blur-md transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col lg:flex-row justify-between items-center gap-4">
+            
+            <!-- Branding Context Block & Theme Control -->
+            <div class="flex items-center justify-between w-full lg:w-auto gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="h-12 w-12 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center shadow-xs transition-colors">
+                        <span class="text-xl font-bold tracking-wider text-white dark:text-slate-950 heading-font">RR</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white heading-font">RR TRADERS</h1>
+                        <p class="text-[11px] text-slate-400 dark:text-slate-500 font-semibold tracking-wide">Mathurapur, Near Maa Ganga Jewellers, CB Ganj, Bareilly</p>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold tracking-wide mt-0.5">📞 +91 9012186727, +91 8449497205</p>
+                    </div>
+                </div>
+
+                <!-- Dark Mode Toggle Button -->
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all shadow-xs" title="Toggle Appearance Profile">
+                    <span id="theme-toggle-icon" class="text-xs font-bold">🌙 Dark Profile</span>
+                </button>
+            </div>
+            
+            <!-- Bento Tab Controls -->
+            <div class="w-full lg:w-auto bg-slate-50 dark:bg-slate-900 p-1 rounded-xl border border-slate-200/40 dark:border-slate-800/50 flex items-center gap-1 overflow-x-auto no-scrollbar snap-x whitespace-nowrap">
+                <button onclick="activateTab('catalog')" id="btn-tab-catalog" class="flex-1 lg:flex-none text-center justify-center flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700 snap-center">
+                    📦 Catalog Grid
+                </button>
+                <button onclick="activateTab('builder')" id="btn-tab-builder" class="flex-1 lg:flex-none text-center justify-center flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 snap-center">
+                    🛒 Pricing Desk
+                </button>
+                <button onclick="activateTab('quotation')" id="btn-tab-quotation" class="flex-1 lg:flex-none text-center justify-center flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 snap-center">
+                    📄 Statement Preview
+                </button>
+            </div>
+
+            <!-- Server Node State Indicator -->
+            <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                <span class="h-1.5 w-1.5 rounded-full bg-amber-400" id="status-pulse"></span>
+                <span id="sync-status">Syncing File Structure...</span>
+            </div>
         </div>
-        <div style="text-align: right; font-size: 0.9rem; color: #e0e7ff; font-weight: 600; letter-spacing: 0.5px;">BAREILLY, UP</div>
     </header>
 
-    <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('calculator-tab', this)">📊 select system</button>
-        <button class="tab-btn" onclick="switchTab('quotation-tab', this)">📜 make quotation</button>
-        <button class="tab-btn" onclick="switchTab('edit-prices-tab', this)">🔧 edit pricing matrix</button>
-    </div>
+    <!-- MAIN CORE SUITE -->
+    <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1">
 
-    <!-- TAB 1: SELECT SYSTEM -->
-    <div id="calculator-tab" class="tab-content active">
-        <div class="summary-grid">
-            <div class="dash-card accent-border">
-                <div class="dash-label">Staged Valuation</div>
-                <div class="dash-val" id="calcGrandTotal">₹0.00</div>
-                <div class="dash-sub" id="calcBreakdownDisplay">Accumulated cost matrix of configured metrics</div>
-            </div>
-            <div class="dash-card">
-                <div class="dash-label">System Selection Scope</div>
-                <div class="dash-val" id="calcItemCount">0 Systems</div>
-                <div class="dash-sub">Total custom blueprints configured inside active loop</div>
-            </div>
-        </div>
-
-        <div class="input-block-row" style="margin-bottom: 1rem;">
-            <div class="input-wrap">
-                <label for="customerNameInput">Customer Tracking Label</label>
-                <input type="text" id="customerNameInput" placeholder="Enter custom buyer or firm name..." oninput="syncCustomerName()">
-            </div>
-            <div class="input-wrap">
-                <label for="searchBar">Search Inventory Matrix</label>
-                <input type="text" id="searchBar" placeholder="Search parameters (e.g., Hybrid, 48V, 5KW, DCR)..." oninput="triggerSearch()">
-            </div>
-        </div>
-
-        <!-- Fast Classification Engine Controller -->
-        <div class="filter-ribbon">
-            <button id="pill-ALL" class="filter-pill-btn active-pill" onclick="filterByClass('ALL')">🌐 Show All Systems</button>
-            <button id="pill-DCR" class="filter-pill-btn" onclick="filterByClass('DCR')">🔵 DCR Architecture</button>
-            <button id="pill-NONDCR" class="filter-pill-btn" onclick="filterByClass('NON DCR')">🟡 Non-DCR Track</button>
-            <button id="pill-HYBRID" class="filter-pill-btn" onclick="filterByClass('HYBRID')">🟠 Hybrid Systems</button>
-        </div>
-
-        <div class="products-grid" id="productsGridContainer">
-            <!-- Staged wide profile layout structures -->
-        </div>
-    </div>
-
-    <!-- TAB 2: MAKE QUOTATION -->
-    <div id="quotation-tab" class="tab-content">
-        <div class="summary-grid" style="grid-template-columns: 1fr;">
-            <div class="dash-card success-border" style="max-width: 650px; margin: 0 auto 1.5rem auto; width: 100%;">
-                <div class="dash-label">Total Outbound Statement Value</div>
-                <div class="dash-val" id="quoteGrandTotal">₹0.00</div>
-                <div class="dash-sub">Calculated directly via designated profile tier configurations</div>
-            </div>
-        </div>
-
-        <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
-            <button class="action-btn" onclick="exportQuotationImage()">📸 Download Digital Receipt</button>
-        </div>
-
-        <!-- High-Resolution Structural Core Matrix Receipt Sheet Blueprint Layout -->
-        <div class="invoice-wrapper">
-            <div class="quote-bill-box" id="customerInvoiceElement">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary); padding-bottom: 1.25rem;">
-                    <div>
-                        <h2 style="letter-spacing: 2px; font-weight: 900; color: var(--primary); font-size: 1.8rem; line-height: 1.1;">RR TRADERS</h2>
-                        <p style="color: #475569; font-size: 0.88rem; font-weight: 700; margin-top: 4px;">Solar Engineering & Green Power Infrastructure</p>
-                        <p style="color: #1e293b; font-size: 0.82rem; font-weight: 700; margin-top: 4px;" id="invoiceContactDisplay">Contact: +91 8449497205, +91 9012186727</p>
-                        <p style="color: #64748b; font-size: 0.75rem; font-weight: 600; margin-top: 2px;" id="invoiceAddressDisplay">Address: Mathurapur, Near Maa Ganga Jewellers, C.B. Ganj, Bareilly</p>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="background: var(--primary); color: white; padding: 6px 12px; font-size: 0.75rem; font-weight: 900; border-radius: 4px; letter-spacing: 1px;">OFFICIAL INVOICE</span>
-                        <p style="font-size: 0.85rem; color: #64748b; font-weight: 700; margin-top: 8px;" id="invoiceDateDisplay"></p>
-                    </div>
-                </div>
-
-                <!-- Live Client Context Header block inside core receipt matrix -->
-                <div style="margin-bottom: 1.5rem; background: #f8fafc; padding: 12px 16px; border-radius: 6px; border: 1px dashed var(--border);" id="clientMetadataShield">
-                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; letter-spacing: 0.5px; margin-bottom: 2px;">CUSTOMER METRIC ACCOUNT:</span>
-                    <span style="font-size: 1.1rem; font-weight: 800; color: var(--primary);" id="invoiceCustomerNameDisplay">WALK-IN CLIENT</span>
-                </div>
-
-                <div style="margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 10px 14px; font-weight: 800; font-size: 0.88rem; color: #475569; border-radius: 6px; margin-bottom: 0.75rem;">
-                        <span>System Architecture Configuration</span>
-                        <span>Net Value</span>
-                    </div>
-                    <div id="invoiceItemsContainer">
-                        <!-- Loaded through script state routines -->
-                    </div>
-                </div>
-
-                <div class="bill-row total-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                    <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; font-weight: 700;">Final Solar System Amount</span>
-                    <span id="invoiceGrandTotal" style="font-size: 2.1rem; font-weight: 950; display: block; margin-top: -2px;">₹0.00</span>
-                </div>
+        <!-- CONTENT TAB 1: PRODUCT CATALOG MATRIX -->
+        <div id="tab-catalog-content" class="space-y-8 sm:space-y-10 no-print animate-slide-in">
+            
+            <div class="text-center max-w-xl mx-auto space-y-2 pt-4 sm:pt-6">
+                <p class="text-[10px] font-extrabold tracking-widest text-slate-400 uppercase">Catalog Showcase</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight heading-font">Our Products</h2>
+                <p class="text-xs text-slate-400 dark:text-slate-500 px-2">Select standard stock ledger profiles below to add item rows dynamically to your pricing desk parameters.</p>
                 
-                <div style="margin-top: 2.5rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    <h4 style="font-size: 0.9rem; color: #1e293b; margin-bottom: 6px; font-weight: 800;">Terms & Framework Specifications:</h4>
-                    <ul style="font-size: 0.8rem; color: #64748b; padding-left: 1.2rem; line-height: 1.5; font-weight: 500;">
-                        <li>Pricing configurations factor comprehensive physical testing modules and core infrastructure layout setups.</li>
-                        <li>Staged quotation structures remain locked down and authorized for exactly 7 business days from target date.</li>
-                        <li>Component hardware guarantees align strictly with native manufacturer certificate records.</li>
-                        <li>Standard system integration, net-metering approvals, and local structure guidelines apply per custom terrain scope.</li>
-                    </ul>
+                <div class="flex flex-wrap justify-center items-center gap-x-5 gap-y-2 pt-4 text-xs font-semibold text-slate-400 dark:text-slate-500">
+                    <span class="text-slate-950 dark:text-white font-bold border-b-2 border-slate-900 dark:border-white pb-1 cursor-pointer">All Product</span>
+                    <span class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer">Standard Inventory</span>
+                    <span class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer">Premium Variants</span>
+                    <span class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer">Custom Dimensions</span>
+                </div>
+            </div>
+
+            <div class="max-w-md mx-auto px-2 sm:px-0">
+                <input type="text" id="search-bar" placeholder="Search catalog index..." 
+                       class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-center text-slate-800 dark:text-slate-100 focus:outline-hidden focus:ring-4 focus:ring-slate-900/5 dark:focus:ring-white/5 focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
+            </div>
+
+            <div id="catalog-card-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div class="col-span-full text-center p-16 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-100 dark:border-slate-900">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="h-6 w-6 border-2 border-slate-900 dark:border-white border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500">Initializing Premium Digital Showroom Matrix...</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- TAB 3: EDIT PRICING MATRIX -->
-    <div id="edit-prices-tab" class="tab-content">
-        <div class="editor-container">
-            <h3 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--primary);">System Configuration Master Matrix</h3>
-            <p style="color: var(--text-muted); font-size: 0.93rem; margin-bottom: 2rem; font-weight: 500;">Modify base component prices, raw setup variables, or target tier rates dynamically below.</p>
+        <!-- CONTENT TAB 2: INTERACTIVE PRICING DESK -->
+        <div id="tab-builder-content" class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 hidden no-print animate-slide-in">
             
-            <div id="editorRowsContainer">
-                <!-- Dynamically populated per system profile registration -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // HARDWARE DATA REGISTRY (DCR, NON-DCR, & HYBRID Track Master Array)
-    const masterProducts = [
-    { name: "UTL FUJIYAMA ON GRID 1KW DCR", panelCost: 25440, panelLabel: "530W × 2 (1060W)", inverterCost: 15930, inverterLabel: "1KW", exactWatts: 1060, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 70.00, dealerPricePerWatt: 55.75, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 2KW DCR", panelCost: 50880, panelLabel: "530W × 4 (2120W)", inverterCost: 16708.8, inverterLabel: "2KW", exactWatts: 2120, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 55.00, dealerPricePerWatt: 46.24, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 3KW DCR", panelCost: 76320, panelLabel: "530W × 6 (3180W)", inverterCost: 17428.6, inverterLabel: "3KW", exactWatts: 3180, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 55.00, dealerPricePerWatt: 47.05, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 4KW DCR", panelCost: 101760, panelLabel: "530W × 8 (4240W)", inverterCost: 18762, inverterLabel: "4KW", exactWatts: 4240, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 56.00, dealerPricePerWatt: 45.60, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 5KW DCR", panelCost: 127200, panelLabel: "530W × 10 (5300W)", inverterCost: 27730, inverterLabel: "5KW", exactWatts: 5300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 55.00, dealerPricePerWatt: 46.18, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 10KW DCR", panelCost: 0, panelLabel: "530W × 20 (10600W)", inverterCost: 0, inverterLabel: "10KW", exactWatts: 10600, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 0, dealerPricePerWatt: 0, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 1KW NON DCR", panelCost: 16500, panelLabel: "550W × 2 (1100W)", inverterCost: 15930, inverterLabel: "1KW", exactWatts: 1100, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 60.00, dealerPricePerWatt: 46.03, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 2KW NON DCR", panelCost: 33000, panelLabel: "550W × 4 (2200W)", inverterCost: 16708.8, inverterLabel: "2KW", exactWatts: 2200, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 48.00, dealerPricePerWatt: 36.87, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 3KW NON DCR", panelCost: 49500, panelLabel: "550W × 6 (3300W)", inverterCost: 17428.6, inverterLabel: "3KW", exactWatts: 3300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 46.00, dealerPricePerWatt: 37.79, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 4KW NON DCR", panelCost: 66000, panelLabel: "550W × 8 (4400W)", inverterCost: 18762, inverterLabel: "4KW", exactWatts: 4400, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 46.00, dealerPricePerWatt: 36.40, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 5KW NON DCR", panelCost: 82500, panelLabel: "550W × 10 (5500W)", inverterCost: 27730, inverterLabel: "5KW", exactWatts: 5500, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 47.00, dealerPricePerWatt: 36.96, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA ON GRID 10KW NON DCR", panelCost: 0, panelLabel: "550W × 20 (11000W)", inverterCost: 0, inverterLabel: "10KW", exactWatts: 11000, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 0, dealerPricePerWatt: 0, batteryCost: 0, batteryLabel: "N/A", batteryCount: 0, panelWarranty: "27 Years Performance", inverterWarranty: "10 Years Standard", batteryWarranty: "" },
-
-{ name: "UTL FUJIYAMA HYBRID 3KW 24V", panelCost: 76320, panelLabel: "530W × 6 (3180W)", inverterCost: 35000, inverterLabel: "3KW 24V Hybrid", exactWatts: 3180, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 67.70, dealerPricePerWatt: 55.70, batteryCost: 29000, batteryLabel: "200Ah Battery Stack", batteryCount: 2, panelWarranty: "27 Years Performance", inverterWarranty: "5 Years Standard", batteryWarranty: "72 Months Replacement" },
-
-{ name: "UTL FUJIYAMA HYBRID 3KW 48V", panelCost: 76320, panelLabel: "530W × 6 (3180W)", inverterCost: 34500, inverterLabel: "3KW 48V Hybrid", exactWatts: 3180, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 70.66, dealerPricePerWatt: 64.66, batteryCost: 58000, batteryLabel: "200Ah Battery Stack", batteryCount: 4, panelWarranty: "27 Years Performance", inverterWarranty: "5 Years Standard", batteryWarranty: "72 Months Replacement" },
-
-{ name: "UTL FUJIYAMA HYBRID 5KW 48V", panelCost: 127200, panelLabel: "530W × 10 (5300W)", inverterCost: 49000, inverterLabel: "5KW 48V Hybrid", exactWatts: 5300, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 66.13, dealerPricePerWatt: 55.13, batteryCost: 58000, batteryLabel: "200Ah Battery Stack", batteryCount: 4, panelWarranty: "27 Years Performance", inverterWarranty: "5 Years Standard", batteryWarranty: "72 Months Replacement" },
-
-{ name: "UTL FUJIYAMA HYBRID 7.5KW 96V", panelCost: 190800, panelLabel: "530W × 15 (7950W)", inverterCost: 68200, inverterLabel: "7.5KW 96V Hybrid", exactWatts: 7950, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 66.80, dealerPricePerWatt: 57.80, batteryCost: 116000, batteryLabel: "200Ah Battery Stack", batteryCount: 8, panelWarranty: "27 Years Performance", inverterWarranty: "5 Years Standard", batteryWarranty: "72 Months Replacement" },
-
-{ name: "UTL FUJIYAMA HYBRID 10KW 120V", panelCost: 254400, panelLabel: "530W × 20 (10600W)", inverterCost: 86500, inverterLabel: "10KW 120V Hybrid", exactWatts: 10600, laborPerWatt: 7, fileCharge: 5000, retailPricePerWatt: 61.31, dealerPricePerWatt: 56.31, batteryCost: 145000, batteryLabel: "200Ah Battery Stack", batteryCount: 10, panelWarranty: "27 Years Performance", inverterWarranty: "5 Years Standard", batteryWarranty: "72 Months Replacement" }
-
-];
-
-    let currentQuantities = {};
-    let selectedTiers = {};
-    let activeClassFilter = 'ALL';
-
-    function initData() {
-        masterProducts.forEach((p, idx) => { 
-            currentQuantities[idx] = 0; 
-            selectedTiers[idx] = 'retail';
-        });
-        
-        const today = new Date();
-        document.getElementById('invoiceDateDisplay').innerText = `Date: ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
-        renderProductCards();
-        renderPriceEditorPanel();
-        evaluateGlobalTotals();
-    }
-
-    function identifySystemType(systemName) {
-        const upper = systemName.toUpperCase();
-        if (upper.includes('HYBRID')) return 'HYBRID';
-        if (upper.includes('NON DCR') || upper.includes('NON-DCR')) return 'NON-DCR';
-        if (upper.includes('DCR')) return 'DCR';
-        return 'UNKNOWN';
-    }
-
-    function switchTab(tabId, btnElement) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        
-        document.getElementById(tabId).classList.add('active');
-        btnElement.classList.add('active');
-
-        if(tabId === 'quotation-tab') { calculateQuotation(); }
-    }
-
-    function getStaticBasePrice(p) {
-        let installationCost = p.exactWatts * p.laborPerWatt;
-        let cumulativeBatteries = p.batteryCost * (p.batteryCount || 0);
-        return p.panelCost + p.inverterCost + installationCost + p.fileCharge + cumulativeBatteries;
-    }
-
-    function calculateSystemActiveRate(p, idx) {
-        const tier = selectedTiers[idx] || 'retail';
-        return tier === 'retail' ? (p.exactWatts * p.retailPricePerWatt) : (p.exactWatts * p.dealerPricePerWatt);
-    }
-
-    function changePriceTier(idx, tierToken) {
-        selectedTiers[idx] = tierToken;
-        
-        const retailBtn = document.getElementById(`btn-retail-${idx}`);
-        const dealerBtn = document.getElementById(`btn-dealer-${idx}`);
-        
-        if (tierToken === 'retail') {
-            if (retailBtn) retailBtn.classList.add('active-retail');
-            if (dealerBtn) retailBtn.classList.remove('active-dealer');
-        } else {
-            if (retailBtn) retailBtn.classList.remove('active-retail');
-            if (dealerBtn) dealerBtn.classList.add('active-dealer');
-        }
-        
-        const activeCost = calculateSystemActiveRate(masterProducts[idx], idx);
-        const displayField = document.getElementById(`active-price-display-${idx}`);
-        if (displayField) displayField.innerText = '₹' + activeCost.toLocaleString('en-IN');
-        
-        evaluateGlobalTotals();
-    }
-
-    function syncCustomerName() {
-        const value = document.getElementById('customerNameInput').value.trim();
-        document.getElementById('invoiceCustomerNameDisplay').innerText = value || "WALK-IN CLIENT";
-    }
-
-    function filterByClass(classToken) {
-        activeClassFilter = classToken;
-        
-        document.querySelectorAll('.filter-pill-btn').forEach(btn => btn.classList.remove('active-pill'));
-        if(classToken === 'ALL') document.getElementById('pill-ALL').classList.add('active-pill');
-        if(classToken === 'DCR') document.getElementById('pill-DCR').classList.add('active-pill');
-        if(classToken === 'NON DCR') document.getElementById('pill-NONDCR').classList.add('active-pill');
-        if(classToken === 'HYBRID') document.getElementById('pill-HYBRID').classList.add('active-pill');
-
-        renderProductCards();
-    }
-
-    function triggerSearch() {
-        renderProductCards();
-    }
-
-    function renderProductCards() {
-        const container = document.getElementById('productsGridContainer');
-        if (!container) return;
-        const query = document.getElementById('searchBar').value.toLowerCase();
-        
-        if (masterProducts.length === 0) {
-            container.innerHTML = `<div style="text-align: center; color: #64748b; padding: 3rem 0; font-weight: 600;">System inventory data loop void.</div>`;
-            return;
-        }
-
-        const filtered = masterProducts.filter(p => {
-            const matchesSearch = p.name.toLowerCase().includes(query);
-            const systemType = identifySystemType(p.name);
-
-            if (activeClassFilter === 'DCR') {
-                return matchesSearch && systemType === 'DCR';
-            } else if (activeClassFilter === 'NON DCR') {
-                return matchesSearch && systemType === 'NON-DCR';
-            } else if (activeClassFilter === 'HYBRID') {
-                return matchesSearch && systemType === 'HYBRID';
-            }
-            return matchesSearch;
-        });
-
-        container.innerHTML = filtered.map(p => {
-            const origIdx = masterProducts.findIndex(mp => mp.name === p.name);
-            const qty = currentQuantities[origIdx] || 0;
-            const currentTier = selectedTiers[origIdx] || 'retail';
-            
-            const installationCost = p.exactWatts * p.laborPerWatt;
-            const staticBasePrice = getStaticBasePrice(p);
-            const currentActivePrice = calculateSystemActiveRate(p, origIdx);
-
-            const retailClass = currentTier === 'retail' ? 'active-retail' : '';
-            const dealerClass = currentTier === 'dealer' ? 'active-dealer' : '';
-
-            const typeToken = identifySystemType(p.name);
-            let badgeBg = '#7c3aed'; 
-            if (typeToken === 'DCR') badgeBg = '#3b82f6';
-            if (typeToken === 'HYBRID') badgeBg = '#f59e0b';
-
-            let batteryString = '';
-            if (typeToken === 'HYBRID') {
-                batteryString = `<span><strong>BATTERY MATRIX:</strong> ${p.batteryLabel} [${p.batteryCount} Units × ₹${p.batteryCost.toLocaleString('en-IN')}]</span>`;
-            }
-
-            return `
-                <div class="product-card">
-                    <div class="card-main-info">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem;">
-                            <span style="background: ${badgeBg}; color: white; padding: 3px 8px; font-size: 0.68rem; font-weight: 900; border-radius: 4px; letter-spacing: 0.5px;">${typeToken}</span>
-                            <div class="prod-title">${p.name}</div>
-                        </div>
-                        <div class="inline-specs-strip">
-                            <span><strong>PANEL:</strong> ${p.panelLabel} [₹${p.panelCost.toLocaleString('en-IN')}]</span>
-                            <span><strong>INVERTER:</strong> ${p.inverterLabel} [₹${p.inverterCost.toLocaleString('en-IN')}]</span>
-                            ${batteryString}
-                            <span><strong>INSTALLATION:</strong> [${p.exactWatts}W × ₹${p.laborPerWatt} = ₹${installationCost.toLocaleString('en-IN')}]</span>
-                            <span><strong>FILE CHARGE:</strong> ₹${p.fileCharge.toLocaleString('en-IN')}</span>
-                            <span><strong>STATIC BASE PRICE:</strong> ₹${staticBasePrice.toLocaleString('en-IN')}</span>
-                        </div>
-                    </div>
-
-                    <div class="tier-toggle-container">
-                        <button id="btn-retail-${origIdx}" class="toggle-btn ${retailClass}" onclick="changePriceTier(${origIdx}, 'retail')">RETAIL [₹${p.retailPricePerWatt}/W]</button>
-                        <button id="btn-dealer-${origIdx}" class="toggle-btn ${dealerClass}" onclick="changePriceTier(${origIdx}, 'dealer')">DEALER [₹${p.dealerPricePerWatt}/W]</button>
-                    </div>
-
-                    <div class="card-pricing-block">
-                        <div class="price-label">Active Target Rate</div>
-                        <div class="price-display" id="active-price-display-${origIdx}">₹${currentActivePrice.toLocaleString('en-IN')}</div>
-                    </div>
-
-                    <div class="card-action-row">
-                        <div class="qty-box">
-                            <button class="qty-btn" onclick="adjustQty(${origIdx}, -1)">-</button>
-                            <span class="qty-num" id="qty-display-${origIdx}">${qty}</span>
-                            <button class="qty-btn" onclick="adjustQty(${origIdx}, 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function adjustQty(idx, delta) {
-        let current = currentQuantities[idx] || 0;
-        current = Math.max(0, current + delta);
-        currentQuantities[idx] = current;
-        
-        const display = document.getElementById(`qty-display-${idx}`);
-        if(display) display.innerText = current;
-        
-        evaluateGlobalTotals();
-    }
-
-    function evaluateGlobalTotals() {
-        let cumulativeSelectionCost = 0;
-        let setupCount = 0;
-
-        masterProducts.forEach((p, idx) => {
-            const qty = currentQuantities[idx] || 0;
-            if (qty > 0) {
-                cumulativeSelectionCost += (qty * calculateSystemActiveRate(p, idx));
-                setupCount += qty;
-            }
-        });
-
-        const calcTotalEl = document.getElementById('calcGrandTotal');
-        const calcCountEl = document.getElementById('calcItemCount');
-        
-        if(calcTotalEl) calcTotalEl.innerText = '₹' + cumulativeSelectionCost.toLocaleString('en-IN');
-        if(calcCountEl) calcCountEl.innerText = `${setupCount} Solar Setup(s)`;
-    }
-
-    function renderPriceEditorPanel() {
-        const container = document.getElementById('editorRowsContainer');
-        container.innerHTML = masterProducts.map((p, idx) => {
-            const classification = identifySystemType(p.name);
-            
-            let batteryEditorBlock = '';
-            if (classification === 'HYBRID') {
-                batteryEditorBlock = `
-                    <div class="input-wrap">
-                        <label>Battery Unit Cost (₹)</label>
-                        <input type="number" value="${p.batteryCost}" oninput="updateLivePriceField(${idx}, 'batteryCost', this.value)">
-                    </div>
-                    <div class="input-wrap">
-                        <label>Battery Count (Qty)</label>
-                        <input type="number" value="${p.batteryCount}" oninput="updateLivePriceField(${idx}, 'batteryCount', this.value)">
-                    </div>
-                `;
-            }
-
-            return `
-                <div class="editor-row">
+            <div class="lg:col-span-8 bg-white dark:bg-slate-950 rounded-xl border border-slate-200/60 dark:border-slate-900 p-4 sm:p-6 space-y-4 shadow-xs">
+                <div class="pb-4 border-b border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="background:#475569; color:white; padding:2px 6px; font-size:0.65rem; font-weight:800; border-radius:3px;">${classification}</span>
-                            <div class="editor-title-block">${p.name}</div>
-                        </div>
-                        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; display:inline-block; margin-top:4px;">Scale Scope: ${p.exactWatts} Watts</span>
+                        <h2 class="text-base font-bold text-slate-900 dark:text-white tracking-tight heading-font">Staged Line Items</h2>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Configure individual item remarks or customized specifications</p>
+                    </div>
+                    <span id="cart-count-badge" class="bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold px-2.5 py-1 rounded-lg text-xs border border-slate-100 dark:border-slate-800">0 Rows Loaded</span>
+                </div>
+
+                <div class="overflow-x-auto -mx-4 sm:mx-0">
+                    <div class="inline-block min-w-full align-middle px-4 sm:px-0">
+                        <table class="min-w-[650px] lg:min-w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
+                                    <th class="py-3 px-4 text-[10px] tracking-widest w-1/4">Particular Description</th>
+                                    <th class="py-3 px-4 text-[10px] tracking-widest w-1/3">Customized Remarks</th>
+                                    <th class="py-3 px-4 text-center text-[10px] tracking-widest w-16">Qty</th>
+                                    <th class="py-3 px-4 text-right text-[10px] tracking-widest">Rate</th>
+                                    <th class="py-3 px-4 text-right text-[10px] tracking-widest">Subtotal</th>
+                                    <th class="py-3 px-4 text-center w-10"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-list" class="divide-y divide-slate-100 dark:divide-slate-900 font-medium">
+                                <tr>
+                                    <td colspan="6" class="text-center py-16 text-slate-400 dark:text-slate-600 text-xs italic bg-slate-50/30 dark:bg-slate-900/10 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+                                        No rows are currently staged. Head over to the 'Catalog Grid' tab to choose elements.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Summary Control Panel Sidebar -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white dark:bg-slate-950 rounded-xl border border-slate-200/60 dark:border-slate-900 p-6 space-y-5 shadow-xs">
+                    <h3 class="text-xs font-bold text-slate-900 dark:text-white tracking-wider uppercase border-b border-slate-100 dark:border-slate-900 pb-3 heading-font">Client Parameters</h3>
+                    
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Account / Customer Name</label>
+                        <input type="text" id="client-name" placeholder="Counter Sale Client..." oninput="syncQuotationHeader()"
+                               class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Quotation Profile Type</label>
+                        <select id="quote-type-select" onchange="syncQuotationHeader()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs font-bold focus:outline-hidden cursor-pointer">
+                            <option value="Commercial Quotation">🏢 Commercial Quotation</option>
+                            <option value="Residential Quotation">🏡 Residential Quotation</option>
+                        </select>
                     </div>
                     
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Rate Profile Tier Mode</label>
+                        <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-900 p-1 rounded-lg border border-slate-200/40 dark:border-slate-800/60">
+                            <button onclick="setPriceTier('retail')" id="tier-retail" class="py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700">🟢 Retail Profile</button>
+                            <button onclick="setPriceTier('dealer')" id="tier-dealer" class="py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">🔵 Dealer Matrix</button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Dynamic Discount Adjustment</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="discount-input" min="0" placeholder="0" oninput="updateCartCalculations()" 
+                                   class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
+                            <select id="discount-type" onchange="updateCartCalculations()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2 text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer focus:outline-hidden">
+                                <option value="percentage">% Ratio</option>
+                                <option value="flat">₹ Value</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 dark:bg-slate-900/60 p-6 rounded-xl space-y-4 text-slate-400 border border-transparent dark:border-slate-800/80">
+                    <div class="flex justify-between items-center text-xs font-bold">
+                        <span>GROSS CUMULATIVE SUM:</span>
+                        <span class="font-mono text-white">₹<span id="cart-subtotal">0.00</span></span>
+                    </div>
+                    <div id="discount-row" class="flex justify-between items-center text-xs font-bold text-emerald-400 hidden">
+                        <span>REBATE DEDUCTION:</span>
+                        <span class="font-mono font-bold">-₹<span id="cart-discount-total">0.00</span></span>
+                    </div>
+                    <div class="border-t border-slate-800 my-1"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-400 tracking-wider">NET RECEIVABLE BALANCE:</span>
+                        <span class="text-lg font-bold font-mono tracking-tight text-white heading-font">₹<span id="cart-total">0.00</span></span>
+                    </div>
+                </div>
+
+                <button onclick="activateTab('quotation')" class="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-white font-bold py-3 px-4 rounded-xl transition-all transform active:scale-[0.99] flex justify-center items-center gap-2 cursor-pointer text-xs tracking-wider uppercase heading-font shadow-md">
+                    Compile Official Statement ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENT TAB 3: CLEAN QUOTATION PREVIEW GRAPH SHEET -->
+        <div id="tab-quotation-content" class="hidden max-w-5xl mx-auto bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-900 rounded-xl p-5 sm:p-12 print-sheet animate-slide-in shadow-xs">
+            
+            <!-- EXPORT GRAPH WRAP CONTAINER FOR RENDER FIDELITY -->
+            <div id="quotation-capture-area" class="bg-white text-slate-900 p-4 rounded-xl transition-colors">
+                <div class="border-b-2 border-slate-900 pb-6 mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div>
-                        <div class="editor-section-title">1. Base Price Breakdown Components</div>
-                        <div class="editor-grid-block">
-                            <div class="input-wrap">
-                                <label>Panel Cost (₹)</label>
-                                <input type="number" value="${p.panelCost}" oninput="updateLivePriceField(${idx}, 'panelCost', this.value)">
-                            </div>
-                            <div class="input-wrap">
-                                <label>Inverter Cost (₹)</label>
-                                <input type="number" value="${p.inverterCost}" oninput="updateLivePriceField(${idx}, 'inverterCost', this.value)">
-                            </div>
-                            ${batteryEditorBlock}
-                            <div class="input-wrap">
-                                <label>Labor (₹/Watt)</label>
-                                <input type="number" value="${p.laborPerWatt}" oninput="updateLivePriceField(${idx}, 'laborPerWatt', this.value)">
-                            </div>
-                            <div class="input-wrap">
-                                <label>File Charge (₹)</label>
-                                <input type="number" value="${p.fileCharge}" oninput="updateLivePriceField(${idx}, 'fileCharge', this.value)">
-                            </div>
+                        <h1 class="text-2xl font-bold tracking-tight text-slate-900 heading-font">RR TRADERS</h1>
+                        <p class="text-xs text-slate-600 font-bold mt-1">Mathurapur, Near Maa Ganga Jewellers, CB Ganj, Bareilly, Uttar Pradesh</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-0.5">Contact: +91 9012186727, +91 8449497205</p>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Proprietor: Mukesh Rastogi</p>
+                    </div>
+                    <div class="text-left sm:text-right space-y-1 w-full sm:w-auto">
+                        <span id="quote-type-label" class="inline-block text-[10px] font-bold tracking-widest text-slate-900 uppercase bg-slate-50 border border-slate-200 px-2.5 py-1 rounded">Commercial Quotation</span>
+                        <p class="text-[10px] font-bold text-slate-400 mt-2" id="quote-timestamp"></p>
+                        <p class="text-xs font-bold text-slate-600">Client Reference: <span id="quote-client-label" class="text-slate-900 font-bold uppercase">Counter Sale Client</span></p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto -mx-5 sm:mx-0">
+                    <div class="inline-block min-w-full align-middle px-5 sm:px-0">
+                        <table class="min-w-[600px] lg:min-w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-300 bg-slate-50 text-slate-700 font-bold uppercase tracking-wider text-[10px]">
+                                    <th class="py-3 px-3">Stock Line Profile</th>
+                                    <th class="py-3 px-3">Custom Remarks / Dimension Specs</th>
+                                    <th class="py-3 px-3 text-center w-16">Qty</th>
+                                    <th class="py-3 px-3 text-right">Unit Rate</th>
+                                    <th class="py-3 px-3 text-right">Line Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quote-sheet-list" class="divide-y divide-slate-200 text-slate-800 font-medium">
+                                <tr>
+                                    <td colspan="5" class="text-center py-12 text-slate-400 italic">No inventory profiles are currently configured.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="w-full sm:w-64 ml-auto mt-8 border-t border-slate-400 pt-4 text-right space-y-2 text-xs font-bold">
+                    <div class="text-slate-500 flex justify-between"><span>Gross Total Balance:</span> <span class="font-mono text-slate-800">₹<span id="print-subtotal">0.00</span></span></div>
+                    <div id="print-discount-row" class="text-emerald-700 flex justify-between hidden"><span>Rebate Reduction:</span> <span class="font-mono">-₹<span id="print-discount">0.00</span></span></div>
+                    <div class="text-sm font-bold text-slate-900 border-t-2 border-double border-slate-900 pt-2 flex justify-between heading-font">
+                        <span>Final Adjusted Net:</span> <span class="font-mono text-slate-900 text-base">₹<span id="print-total">0.00</span></span>
+                    </div>
+                </div>
+
+                <!-- TRIPLE SYSTEM METRIC SECTION: TERMS, WARRANTY AND SECURE SETTLEMENT GATEWAY -->
+                <div class="mt-12 pt-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    
+                    <!-- Columns 1: Commercial Rules Layout -->
+                    <div>
+                        <h4 class="text-[11px] font-bold tracking-wider uppercase text-slate-900 heading-font mb-2.5">Terms &amp; Conditions:</h4>
+                        <ol class="list-decimal list-inside text-[10px] text-slate-500 space-y-1 font-medium">
+                            <li>Prices quoted are valid for a maximum period of 7 days from the timestamp statement period.</li>
+                            <li>All financial figures given are absolute estimations based on stock profile parameters loaded.</li>
+                            <li>Delivery or dispatch schedules are subject to raw inventory updates and vendor clearance windows.</li>
+                            <li>Applicable state/central taxation modules will be accurately processed during final ledger compilation.</li>
+                            <li>Goods once dispatched or cut to custom user dimensions cannot be elements of return rules.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Column 2: Equipment Assurance Layout -->
+                    <div>
+                        <h4 class="text-[11px] font-bold tracking-wider uppercase text-slate-900 heading-font mb-2.5">Warranty Assurance Profile:</h4>
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
+                            <table class="w-full text-left border-collapse text-[10px]">
+                                <thead>
+                                    <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[9px]">
+                                        <th class="py-1.5 px-3">Equipment Classification</th>
+                                        <th class="py-1.5 px-3 text-right">Assurance Coverage</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 font-medium text-slate-600">
+                                    <tr>
+                                        <td class="py-1.5 px-3 font-semibold text-slate-800">INVERTER ON GRID</td>
+                                        <td class="py-1.5 px-3 text-right font-bold text-slate-900">10 YEARS</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-1.5 px-3 font-semibold text-slate-800">HYBRID INVERTER</td>
+                                        <td class="py-1.5 px-3 text-right font-bold text-slate-900">5 YEARS</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-1.5 px-3 font-semibold text-slate-800">SOLAR PANEL</td>
+                                        <td class="py-1.5 px-3 text-right font-bold text-slate-900">27 YRS PERF.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-1.5 px-3 font-semibold text-slate-800">BATTERY</td>
+                                        <td class="py-1.5 px-3 text-right font-bold text-slate-900">36 + 36 MOS</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div style="margin-top: 0.5rem;">
-                        <div class="editor-section-title">2. Outbound Tier Calculation Rates</div>
-                        <div class="editor-grid-block" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                            <div class="input-wrap">
-                                <label>Retail Price (₹/W)</label>
-                                <input type="number" value="${p.retailPricePerWatt}" oninput="updateLivePriceField(${idx}, 'retailPricePerWatt', this.value)">
+                    <!-- Column 3: Corporate Banking Coordinates -->
+                    <div>
+                        <h4 class="text-[11px] font-bold tracking-wider uppercase text-slate-900 heading-font mb-2.5">Bank Settlement Details:</h4>
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1.5 text-[10px] text-slate-600 font-medium">
+                            <div>
+                                <span class="block uppercase font-bold text-[8px] text-slate-400 tracking-wider">Beneficiary Name</span>
+                                <span class="text-slate-900 font-bold">RR TRADERS</span>
                             </div>
-                            <div class="input-wrap">
-                                <label>Dealer Price (₹/W)</label>
-                                <input type="number" value="${p.dealerPricePerWatt}" oninput="updateLivePriceField(${idx}, 'dealerPricePerWatt', this.value)">
+                            <div>
+                                <span class="block uppercase font-bold text-[8px] text-slate-400 tracking-wider">Account Number</span>
+                                <span class="text-slate-900 font-bold font-mono tracking-wide">15861600000009</span>
+                            </div>
+                            <div>
+                                <span class="block uppercase font-bold text-[8px] text-slate-400 tracking-wider">IFSC Routing Code</span>
+                                <span class="text-slate-900 font-bold font-mono text-emerald-700">PSIB0021586</span>
+                            </div>
+                            <div>
+                                <span class="block uppercase font-bold text-[8px] text-slate-400 tracking-wider">Branch Location Address</span>
+                                <span class="text-slate-800 font-semibold uppercase">PARSAKHEDA BAREILLY</span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="mt-12 pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4 no-print">
+                <p class="text-xs text-slate-400 dark:text-slate-500 italic text-center sm:text-left">Confirm mathematical item rows adjustments prior to export workflows.</p>
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
+                    <button onclick="activateTab('builder')" class="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors text-slate-500 dark:text-slate-400 cursor-pointer w-full sm:w-auto">
+                        ← Modify Selection
+                    </button>
+                    <button onclick="exportQuotationAsPNG()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-xs tracking-wider uppercase cursor-pointer flex justify-center items-center gap-2 w-full sm:w-auto heading-font transition-colors">
+                        🖼️ Export Image (PNG)
+                    </button>
+                    <button onclick="window.print()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-white font-bold text-xs rounded-lg shadow-xs tracking-wider uppercase cursor-pointer flex justify-center items-center gap-2 w-full sm:w-auto heading-font">
+                        🖨️ Export PDF / Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- CORE JS SYSTEM ARCHITECTURE ENGINE -->
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhmUz7NSr5jSZgOYlZxL0-2RMFFS_pyvHYq8Fq67ohJ8qWt9D3v4k8syf0yEFmyc6h/exec";
+
+        let inventoryData = [];
+        let cart = [];
+        let activePriceTier = 'retail';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeThemeProfile();
+            fetchInventory();
+            document.getElementById('search-bar').addEventListener('input', filterInventory);
+            document.getElementById('quote-timestamp').innerText = `Statement Period: ${new Date().toLocaleDateString('en-IN')} | ${new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'})}`;
+        });
+
+        function initializeThemeProfile() {
+            const storedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-toggle-icon').innerText = "☀️ Light Profile";
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-toggle-icon').innerText = "🌙 Dark Profile";
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDarkActive = document.documentElement.classList.contains('dark');
+            if (isDarkActive) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-toggle-icon').innerText = "🌙 Dark Profile";
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-toggle-icon').innerText = "☀️ Light Profile";
+            }
+        }
+
+        function showNotification(itemName) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            toast.className = "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-slide-in pointer-events-auto w-full";
+            toast.innerHTML = `
+                <div class="h-4 w-4 rounded-full bg-emerald-500 text-slate-950 dark:text-white flex items-center justify-center text-[10px] font-bold">✓</div>
+                <div class="flex-1">
+                    <p class="text-[9px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider">Added To Order Desk</p>
+                    <p class="text-xs font-bold line-clamp-1">${itemName}</p>
+                </div>
             `;
-        }).join('');
-    }
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(4px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
 
-    function updateLivePriceField(idx, fieldKey, val) {
-        const parsedVal = parseFloat(val) || 0;
-        masterProducts[idx][fieldKey] = parsedVal;
-        
-        renderProductCards();
-        evaluateGlobalTotals();
-    }
+        function activateTab(tabId) {
+            ['catalog', 'builder', 'quotation'].forEach(t => {
+                document.getElementById(`tab-${t}-content`).classList.add('hidden');
+                document.getElementById(`btn-tab-${t}`).className = "flex-1 lg:flex-none text-center justify-center flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 snap-center";
+            });
 
-    function calculateQuotation() {
-        let baseCostTotal = 0; 
-        let itemsSelectedHTML = '';
+            document.getElementById(`tab-${tabId}-content`).classList.remove('hidden');
+            document.getElementById(`btn-tab-${tabId}`).className = "flex-1 lg:flex-none text-center justify-center flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700 snap-center";
+        }
 
-        masterProducts.forEach((product, idx) => {
-            const qty = currentQuantities[idx] || 0;
-            if(qty > 0) {
-                const selectedRate = calculateSystemActiveRate(product, idx);
-                const itemBaseCost = selectedRate * qty;
-                baseCostTotal += itemBaseCost;
+        async function fetchInventory() {
+            const statusEl = document.getElementById('sync-status');
+            const pulseEl = document.getElementById('status-pulse');
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const result = await response.json();
+                if (result.status === "success") {
+                    inventoryData = result.data;
+                    statusEl.innerText = "Showroom Connected";
+                    pulseEl.className = "h-1.5 w-1.5 rounded-full bg-emerald-500";
+                    renderInventoryCards(inventoryData);
+                } else { throw new Error(result.message); }
+            } catch (error) {
+                statusEl.innerText = "Local Cache Mode";
+                pulseEl.className = "h-1.5 w-1.5 rounded-full bg-rose-500";
+                renderInventoryCards([]);
+            }
+        }
+
+        function renderInventoryCards(items) {
+            const gridContainer = document.getElementById('catalog-card-grid');
+            if (items.length === 0) {
+                gridContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-400 dark:text-slate-600 text-xs italic bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-100 dark:border-slate-900">No active stock matches your query criteria.</div>`;
+                return;
+            }
+
+            gridContainer.innerHTML = items.map(item => {
+                const specLabel = item.description && item.description.trim() !== "" ? item.description : "Premium standard issue profile crafted with exact engineering benchmarks.";
+                const activePrice = activePriceTier === 'retail' ? parseFloat(item.retail_price || 0) : parseFloat(item.dealer_price || 0);
                 
-                const activeTierName = selectedTiers[idx].toUpperCase();
-                const isHybrid = identifySystemType(product.name) === 'HYBRID';
-
-                itemsSelectedHTML += `
-                    <div style="border-bottom: 1px dashed #e2e8f0; padding: 14px 0;">
-                        <div class="bill-row" style="padding: 0; border: none; margin-bottom: 6px;">
-                            <div>
-                                <span style="font-weight: 800; color: #0f172a; font-size:1.05rem; display:block; margin-bottom:3px;">${product.name}</span>
-                                <span style="font-size:0.82rem; color:#64748b; font-weight:700; background:#f1f5f9; padding:2px 6px; border-radius:4px;">Volume: ${qty} Unit(s) • ${activeTierName} Tier</span>
+                return `
+                    <div class="ecommerce-card bg-slate-50/40 hover:bg-white dark:bg-slate-900/20 dark:hover:bg-slate-900 border border-slate-100/70 hover:border-slate-200/80 dark:border-slate-900/60 dark:hover:border-slate-800 rounded-xl p-5 flex flex-col justify-between text-left group shadow-xs">
+                        <div class="flex-1 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <span class="text-[9px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">ID: #${item.id || 'N/A'}</span>
+                                <h1 class="text-base font-extrabold text-slate-900 dark:text-white tracking-tight heading-font uppercase pt-1">${item.name || 'UNNAMED STOCK ITEM'}</h1>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">${specLabel}</p>
                             </div>
-                            <span style="font-weight:900; color:#0f172a; font-size:1.2rem;">₹${itemBaseCost.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
-                        </div>
-                        
-                        <!-- Comprehensive Sub-Component & Warranty Log Breakdown -->
-                        <div class="quote-item-details">
-                            <div class="quote-detail-line">
-                                <span>📦 <strong>Solar Panels:</strong> ${product.panelLabel}</span>
-                                <span style="color: #10b981; font-weight: 700;">🛡️ ${product.panelWarranty}</span>
+                            
+                            <div class="pt-4 flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-900 mt-5">
+                                <span class="text-base font-extrabold text-[#e15b5b] dark:text-[#f87171] font-mono">₹${activePrice.toFixed(2)}</span>
+                                <button onclick="addToCart('${item.id}')" class="px-3 py-1.5 bg-slate-950 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 text-[10px] font-bold tracking-wider uppercase rounded-lg cursor-pointer transition-all">
+                                    + Add Item
+                                </button>
                             </div>
-                            <div class="quote-detail-line">
-                                <span>⚙️ <strong>Inverter Unit:</strong> ${product.inverterLabel} Module</span>
-                                <span style="color: #10b981; font-weight: 700;">🛡️ ${product.inverterWarranty}</span>
-                            </div>
-                            ${isHybrid ? `
-                            <div class="quote-detail-line">
-                                <span>🔋 <strong>Battery Bank:</strong> ${product.batteryLabel} (${product.batteryCount} Qty)</span>
-                                <span style="color: #10b981; font-weight: 700;">🛡️ ${product.batteryWarranty}</span>
-                            </div>
-                            ` : ''}
                         </div>
                     </div>
                 `;
+            }).join('');
+        }
+
+        function filterInventory() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = inventoryData.filter(item => 
+                (item.name && item.name.toLowerCase().includes(query)) || 
+                (item.description && item.description.toLowerCase().includes(query)) ||
+                String(item.id).toLowerCase().includes(query)
+            );
+            renderInventoryCards(filtered);
+        }
+
+        function setPriceTier(tier) {
+            activePriceTier = tier;
+            document.getElementById('tier-retail').className = tier === 'retail' ? "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700" : "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-200";
+            document.getElementById('tier-dealer').className = tier === 'dealer' ? "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700" : "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-200";
+            renderInventoryCards(inventoryData);
+            updateCartCalculations();
+        }
+
+        function addToCart(itemId) {
+            const product = inventoryData.find(item => String(item.id) === String(itemId));
+            if (!product) return;
+            const existing = cart.find(item => String(item.id) === String(itemId));
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1, custom_description: product.description || "" });
             }
-        });
+            updateCartCalculations();
+            showNotification(product.name || 'Stock Item');
+        }
 
-        document.getElementById('quoteGrandTotal').innerText = '₹' + baseCostTotal.toLocaleString('en-IN', {maximumFractionDigits: 0});
+        function updateQty(itemId, newQty) {
+            const quantity = parseInt(newQty);
+            if (quantity <= 0) {
+                cart = cart.filter(item => String(item.id) !== String(itemId));
+            } else {
+                const item = cart.find(item => String(item.id) === String(itemId));
+                if (item) item.qty = quantity;
+            }
+            updateCartCalculations();
+        }
 
-        const container = document.getElementById('invoiceItemsContainer');
-        container.innerHTML = itemsSelectedHTML || `<p style="text-align:center; color:#94a3b8; padding: 2.5rem 0; font-weight:600;">No blueprints deployed inside console workspace.</p>`;
-        document.querySelectorAll('#invoiceGrandTotal').forEach(el => {
-            el.innerText = '₹' + baseCostTotal.toLocaleString('en-IN', {maximumFractionDigits: 0});
-        });
-    }
+        function updateLineDescription(itemId, value) {
+            const item = cart.find(item => String(item.id) === String(itemId));
+            if (item) item.custom_description = value;
+            syncQuotationLedgerViewOnly();
+        }
 
-    function exportQuotationImage() {
-        const invoice = document.getElementById('customerInvoiceElement');
-        invoice.style.border = '1px solid #000000';
+        function syncQuotationHeader() {
+            const val = document.getElementById('client-name').value.trim();
+            document.getElementById('quote-client-label').innerText = val !== "" ? val : "Counter Sale Client";
 
-        html2canvas(invoice, {
-            scale: 2.5,
-            logging: false,
-            useCORS: true,
-            backgroundColor: '#ffffff'
-        }).then(canvas => {
-            invoice.style.border = '';
-            const link = document.createElement('a');
+            const selectedType = document.getElementById('quote-type-select').value;
+            document.getElementById('quote-type-label').innerText = selectedType;
+        }
+
+        function updateCartCalculations() {
+            const listContainer = document.getElementById('cart-list');
+            let subTotal = 0;
+            document.getElementById('cart-count-badge').innerText = `${cart.length} Rows Configured`;
+
+            if (cart.length === 0) {
+                listContainer.innerHTML = `<tr><td colspan="6" class="text-center py-16 text-slate-400 dark:text-slate-600 text-xs italic bg-slate-50/30 dark:bg-slate-900/10 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">No rows are currently staged. Head over to the 'Catalog Grid' tab to choose elements.</td></tr>`;
+                document.getElementById('cart-subtotal').innerText = "0.00";
+                document.getElementById('cart-total').innerText = "0.00";
+                document.getElementById('discount-row').classList.add('hidden');
+                syncQuotationLedgerViewOnly();
+                return;
+            }
+
+            listContainer.innerHTML = cart.map(item => {
+                const rate = activePriceTier === 'retail' ? parseFloat(item.retail_price || 0) : parseFloat(item.dealer_price || 0);
+                const total = rate * item.qty;
+                subTotal += total;
+                return `
+                    <tr class="align-middle border-b border-slate-100 dark:border-slate-900/60">
+                        <td class="py-4 px-4 font-bold text-slate-900 dark:text-white uppercase text-xs">${item.name || 'Unnamed Stock'}</td>
+                        <td class="py-4 px-4">
+                            <input type="text" value="${item.custom_description}" oninput="updateLineDescription('${item.id}', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 focus:outline-hidden focus:bg-white dark:focus:bg-slate-950" placeholder="Sizes, modifications...">
+                        </td>
+                        <td class="py-4 px-4 text-center">
+                            <input type="number" value="${item.qty}" min="0" onchange="updateQty('${item.id}', this.value)" class="w-12 text-center bg-slate-50 dark:bg-slate-900 border border-slate-200 border-slate-800 rounded-md p-1 text-xs font-bold focus:outline-hidden text-slate-800 dark:text-slate-200">
+                        </td>
+                        <td class="py-4 px-4 text-right font-mono text-slate-400 dark:text-slate-500 text-xs">₹${rate.toFixed(2)}</td>
+                        <td class="py-4 px-4 text-right font-bold font-mono text-slate-900 dark:text-white text-xs">₹${total.toFixed(2)}</td>
+                        <td class="py-4 px-4 text-center">
+                            <button onclick="updateQty('${item.id}', 0)" class="text-slate-300 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            let discInput = parseFloat(document.getElementById('discount-input').value) || 0;
+            let discType = document.getElementById('discount-type').value;
+            let discAmount = discType === 'percentage' ? subTotal * (discInput / 100) : discInput;
+            if (discAmount > subTotal) discAmount = subTotal;
+            let grandTotal = subTotal - discAmount;
+
+            document.getElementById('discount-row').classList.toggle('hidden', discAmount <= 0);
+            document.getElementById('print-discount-row').classList.toggle('hidden', discAmount <= 0);
+
+            document.getElementById('cart-subtotal').innerText = subTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+            document.getElementById('cart-discount-total').innerText = discAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+            document.getElementById('cart-total').innerText = grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
             
-            const rawClient = document.getElementById('customerNameInput').value.trim();
-            const safeClientString = rawClient.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'client';
-            
-            link.download = `RR_Traders_Solar_Invoice_${safeClientString}.png`;
-            link.href = canvas.toToDataURL || canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
-            alert('Image capture fault encountered.');
-            console.error(err);
-        });
-    }
+            document.getElementById('print-subtotal').innerText = subTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+            document.getElementById('print-discount').innerText = discAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+            document.getElementById('print-total').innerText = grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
-    initData();
-</script>
+            syncQuotationLedgerViewOnly();
+        }
+
+        function syncQuotationLedgerViewOnly() {
+            const printBody = document.getElementById('quote-sheet-list');
+            if (cart.length === 0) {
+                printBody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-slate-400 italic">No inventory profiles are currently configured.</td></tr>`;
+                return;
+            }
+
+            printBody.innerHTML = cart.map(item => {
+                const rate = activePriceTier === 'retail' ? parseFloat(item.retail_price || 0) : parseFloat(item.dealer_price || 0);
+                const total = rate * item.qty;
+                return `
+                    <tr class="align-middle border-b border-slate-200">
+                        <td class="py-3 px-3 font-bold text-slate-900 uppercase text-xs">${item.name || 'Unnamed Profile'}</td>
+                        <td class="py-3 px-3 text-slate-500 text-xs font-semibold italic">${item.custom_description || 'Standard Grade Parameters'}</td>
+                        <td class="py-3 px-3 text-center font-bold font-mono text-xs">${item.qty}</td>
+                        <td class="py-3 px-3 text-right font-mono text-slate-500 text-xs">₹${rate.toFixed(2)}</td>
+                        <td class="py-3 px-3 text-right font-bold font-mono text-slate-900 text-xs">₹${total.toFixed(2)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function exportQuotationAsPNG() {
+            const targetElement = document.getElementById('quotation-capture-area');
+            const clientName = document.getElementById('client-name').value.trim() || "Counter_Sale_Client";
+            const selectedType = document.getElementById('quote-type-select').value.replace(/\s+/g, '_');
+            const dateStr = new Date().toISOString().split('T')[0];
+            
+            const options = {
+                scale: 2, 
+                useCORS: true,
+                backgroundColor: '#ffffff', 
+                logging: false,
+                willReadFrequently: true
+            };
+
+            html2canvas(targetElement, options).then(canvas => {
+                const imageURI = canvas.toDataURL("image/png");
+                const virtualAnchor = document.createElement('a');
+                virtualAnchor.href = imageURI;
+                virtualAnchor.download = `${selectedType}_${clientName}_${dateStr}.png`;
+                document.body.appendChild(virtualAnchor);
+                virtualAnchor.click();
+                document.body.removeChild(virtualAnchor);
+            }).catch(err => {
+                console.error("PNG Rendering Exception: ", err);
+            });
+        }
+    </script>
 </body>
 </html>
