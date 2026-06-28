@@ -3,26 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RR TRADERS - Management Suite v5.0</title>
-    <!-- Premium Google Fonts Workspace -->
+    <title>RR TRADERS - Management Suite v5.2</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=Space+Grotesk:wght=500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS Script Wrapper -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
-    <!-- Premium Image Render Engine Script Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* Force manual inline variant rule to fix Tailwind v4 engine compilation gaps */
-        @custom-variant dark (&:where(.dark, .dark *));
+        /* Multi-Theme Core Configuration Layer */
+        :root {
+            --bg-main: #ffffff;
+            --text-main: #0f172a;
+            --border-main: rgba(226, 232, 240, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-hover: #ffffff;
+            --accent-color: #0f172a;
+            --accent-text: #ffffff;
+            --particle-rgb: "15, 23, 42";
+        }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [data-theme="dark"] {
+            --bg-main: #020617;
+            --text-main: #f8fafc;
+            --border-main: rgba(30, 41, 59, 0.6);
+            --card-bg: rgba(15, 23, 42, 0.3);
+            --card-hover: rgba(15, 23, 42, 0.8);
+            --accent-color: #ffffff;
+            --accent-text: #020617;
+            --particle-rgb: "245, 158, 11";
+        }
+
+        [data-theme="valorant"] {
+            --bg-main: #11141a;
+            --text-main: #ece8e1;
+            --border-main: rgba(255, 70, 85, 0.3);
+            --card-bg: rgba(26, 31, 39, 0.5);
+            --card-hover: #1a1f27;
+            --accent-color: #ff4655;
+            --accent-text: #ece8e1;
+            --particle-rgb: "255, 70, 85";
+        }
+
+        [data-theme="solar"] {
+            --bg-main: #041e16;
+            --text-main: #f0fdf4;
+            --border-main: rgba(16, 185, 129, 0.3);
+            --card-bg: rgba(6, 78, 59, 0.2);
+            --card-hover: rgba(6, 78, 59, 0.5);
+            --accent-color: #10b981;
+            --accent-text: #041e16;
+            --particle-rgb: "52, 211, 153";
+        }
+
+        [data-theme="cyberpunk"] {
+            --bg-main: #0d0c00;
+            --text-main: #fffbeb;
+            --border-main: rgba(245, 158, 11, 0.4);
+            --card-bg: rgba(29, 26, 0, 0.4);
+            --card-hover: rgba(45, 41, 0, 0.8);
+            --accent-color: #f59e0b;
+            --accent-text: #0d0c00;
+            --particle-rgb: "245, 158, 11";
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+        }
         .heading-font { font-family: 'Space Grotesk', sans-serif; }
         
-        /* Minimalist Micro-interactions */
+        /* Apply dynamic CSS variables to structural frames */
+        .theme-border { border-color: var(--border-main) !important; }
+        .theme-card { background-color: var(--card-bg) !important; border-color: var(--border-main) !important; }
+        .theme-card:hover { background-color: var(--card-hover) !important; }
+        .theme-accent-btn { background-color: var(--accent-color) !important; color: var(--accent-text) !important; }
+        
         .ecommerce-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .ecommerce-card:hover { transform: translateY(-4px); }
         
@@ -32,183 +91,173 @@
         }
         .animate-slide-in { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Custom Scrollbar for Horizontal Touch Tabs */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Print Layout Rules */
+        /* REMOVE BROWSER HEADERS AND FOOTERS (URL, DATE, TITLE) ON PRINT */
         @media print {
-            body { background: white !important; color: black !important; }
+            @page {
+                size: auto;
+                margin: 6mm; /* Keeps content away from edges but strips out browser URL/footers */
+            }
+            body { 
+                background: white !important; 
+                color: black !important; 
+                padding: 0 !important;
+                margin: 0 !important;
+            }
             .no-print { display: none !important; }
             .print-only { display: block !important; }
             #bg-canvas { display: none !important; }
-            #tab-quotation-content { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+            #tab-quotation-content { 
+                display: block !important; 
+                border: none !important; 
+                box-shadow: none !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                width: 100% !important;
+            }
             #tab-catalog-content, #tab-builder-content, #tab-manual-content { display: none !important; }
         }
     </style>
 </head>
-<body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen antialiased flex flex-col transition-colors duration-300 relative">
+<body class="min-h-screen antialiased flex flex-col transition-colors duration-300 relative">
 
-    <!-- DYNAMIC BACKGROUND PROP CANVAS (Hides completely on Print) -->
     <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 no-print transition-opacity duration-500"></canvas>
 
-    <!-- TOAST NOTIFICATION CONTAINER MOUNT -->
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
 
-    <!-- UPGRADED ULTRA-COOL DESIGN MAIN NAVIGATION BAR -->
-    <header class="sticky top-0 z-40 no-print backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/40 shadow-xs transition-all duration-300">
+    <header class="sticky top-0 z-40 no-print backdrop-blur-md bg-opacity-70 border-b theme-border transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col lg:flex-row justify-between items-center gap-4">
             
-            <!-- Branding Block & Dynamic Accent Glow Toggle -->
             <div class="flex items-center justify-between w-full lg:w-auto gap-4">
                 <div class="flex items-center gap-3 group">
-                    <div class="h-11 w-11 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center shadow-xs transition-transform duration-300 group-hover:scale-105">
-                        <span class="text-lg font-extrabold tracking-wider text-white dark:text-slate-950 heading-font">RR</span>
+                    <div class="relative inline-block text-left">
+                        <select id="themeSelector" onchange="changeThemeEngine(this.value)" class="p-2 px-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/40 dark:border-slate-800/60 font-bold text-xs tracking-wide cursor-pointer focus:outline-hidden transition-all duration-200 text-slate-700 dark:text-slate-300">
+                            <option value="light">☀️ Default Light</option>
+                            <option value="dark">🌙 Dark Slate</option>
+                            <option value="valorant">🎯 Neon Valorant</option>
+                            <option value="solar">🌱 Emerald Solar</option>
+                            <option value="cyberpunk">⚡ Cyberpunk Amber</option>
+                        </select>
                     </div>
+
                     <div>
-                        <h1 class="text-base font-black tracking-tight text-slate-900 dark:text-white heading-font flex items-center gap-1.5">
+                        <h1 class="text-base font-black tracking-tight text-current heading-font flex items-center gap-1.5">
                             RR TRADERS
                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         </h1>
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold tracking-wide">Mathurapur, Near Maa Ganga Jewellers, CB Ganj, Bareilly</p>
-                        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-extrabold tracking-wider mt-0.5 opacity-85">📞 +91 9012186727, +91 8449497205</p>
+                        <p class="text-[10px] text-slate-400 font-bold tracking-wide">Mathurapur, Near Maa Ganga Jewellers, CB Ganj, Bareilly</p>
+                        <p class="text-[9px] text-slate-500 font-extrabold tracking-wider mt-0.5 opacity-85">📞 +91 9012186727, +91 8449497205</p>
                     </div>
                 </div>
-
-                <!-- Appearance Control Mode Switcher -->
-                <button onclick="toggleDarkMode()" class="p-2 px-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/40 dark:border-slate-800/60 text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-all duration-200 text-[11px] font-bold tracking-wide flex items-center gap-1.5" title="Toggle Appearance Profile">
-                    <span id="theme-toggle-icon">🌙 Dark Profile</span>
-                </button>
             </div>
             
-            <!-- Cool Premium Tab Controls - Full Width Fluid Screen Fit Matrix -->
-            <div class="w-full lg:max-w-2xl bg-slate-100/80 dark:bg-slate-900/80 p-1 rounded-xl border border-slate-200/30 dark:border-slate-800/50 flex items-center gap-1 overflow-x-auto no-scrollbar snap-x whitespace-nowrap shadow-inner">
-                <button onclick="activateTab('catalog')" id="btn-tab-catalog" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700 snap-center transform scale-[1.02]">
+            <div class="w-full lg:max-w-2xl bg-slate-100/40 dark:bg-slate-900/40 p-1 rounded-xl border theme-border flex items-center gap-1 overflow-x-auto no-scrollbar snap-x whitespace-nowrap shadow-inner">
+                <button onclick="activateTab('catalog')" id="btn-tab-catalog" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 theme-accent-btn shadow-xs snap-center transform scale-[1.02]">
                     📦 Catalog Grid
                 </button>
-                <button onclick="activateTab('builder')" id="btn-tab-builder" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 snap-center hover:bg-white/40 dark:hover:bg-slate-800/30">
+                <button onclick="activateTab('builder')" id="btn-tab-builder" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-400 hover:text-current snap-center hover:bg-white/10">
                     🛒 Pricing Desk
                 </button>
-                <button onclick="activateTab('manual')" id="btn-tab-manual" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 snap-center hover:bg-white/40 dark:hover:bg-slate-800/30">
+                <button onclick="activateTab('manual')" id="btn-tab-manual" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-400 hover:text-current snap-center hover:bg-white/10">
                     📝 Manual Quotation
                 </button>
-                <button onclick="activateTab('quotation')" id="btn-tab-quotation" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 snap-center hover:bg-white/40 dark:hover:bg-slate-800/30">
+                <button onclick="activateTab('quotation')" id="btn-tab-quotation" class="flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-400 hover:text-current snap-center hover:bg-white/10">
                     📄 Statement Preview
                 </button>
             </div>
 
-            <!-- Server Integrity Realtime Pulse Status Node -->
-            <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/50 dark:bg-slate-900/50 border border-slate-200/30 dark:border-slate-800/30 text-[10px] font-extrabold tracking-wide text-slate-500 dark:text-slate-400 uppercase">
+            <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/20 dark:bg-slate-900/20 border theme-border text-[10px] font-extrabold tracking-wide text-slate-400 uppercase">
                 <span class="h-1.5 w-1.5 rounded-full bg-amber-400" id="status-pulse"></span>
                 <span id="sync-status">Syncing File Structure...</span>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CORE MANAGEMENT WORKSPACE -->
     <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 z-10 relative">
 
-        <!-- CONTENT TAB 1: PRODUCT CATALOG MATRIX -->
         <div id="tab-catalog-content" class="space-y-8 sm:space-y-10 no-print animate-slide-in">
             
             <div class="text-center max-w-xl mx-auto space-y-2 pt-4 sm:pt-6">
                 <p class="text-[10px] font-extrabold tracking-widest text-slate-400 uppercase">Catalog Showcase</p>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight heading-font">Our Products</h2>
-                <p class="text-xs text-slate-400 dark:text-slate-500 px-2">Select standard stock ledger profiles below to add item rows dynamically to your pricing desk parameters.</p>
-                
-                <div class="flex flex-wrap justify-center items-center gap-x-5 gap-y-2 pt-4 text-xs font-semibold text-slate-400 dark:text-slate-500">
-                    <span class="text-slate-950 dark:text-white font-bold border-b-2 border-slate-900 dark:border-white pb-1 cursor-pointer">All Product</span>
-                    <span class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer">Standard Inventory</span>
-                    <span class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer">Premium Variants</span>
-                    <span class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer">Custom Dimensions</span>
-                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight heading-font">Our Products</h2>
+                <p class="text-xs text-slate-400 px-2">Select standard stock ledger profiles below to add item rows dynamically to your pricing desk parameters.</p>
             </div>
 
             <div class="max-w-md mx-auto px-2 sm:px-0">
                 <input type="text" id="search-bar" placeholder="Search catalog index..." 
-                       class="w-full px-4 py-2.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xs border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-center text-slate-800 dark:text-slate-100 focus:outline-hidden focus:ring-4 focus:ring-slate-900/5 dark:focus:ring-white/5 focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all shadow-xs">
+                       class="w-full px-4 py-2.5 bg-white/10 backdrop-blur-xs border theme-border rounded-xl text-xs font-semibold text-center text-current focus:outline-hidden transition-all shadow-xs">
             </div>
 
             <div id="catalog-card-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div class="col-span-full text-center p-16 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-100 dark:border-slate-900">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="h-6 w-6 border-2 border-slate-900 dark:border-white border-t-transparent rounded-full animate-spin"></div>
-                        <p class="text-xs font-bold text-slate-400 dark:text-slate-500">Initializing Premium Digital Showroom Matrix...</p>
-                    </div>
                 </div>
-            </div>
         </div>
 
-        <!-- CONTENT TAB 2: INTERACTIVE PRICING DESK -->
         <div id="tab-builder-content" class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 hidden no-print animate-slide-in">
             
-            <div class="lg:col-span-8 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-xl border border-slate-200/60 dark:border-slate-900 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div class="pb-4 border-b border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div class="lg:col-span-8 backdrop-blur-md rounded-xl border theme-border p-4 sm:p-6 space-y-4 shadow-xs bg-white/5">
+                <div class="pb-4 border-b theme-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900 dark:text-white tracking-tight heading-font">Staged Line Items</h2>
-                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Configure individual item remarks or customized specifications</p>
+                        <h2 class="text-base font-bold tracking-tight heading-font">Staged Line Items</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Configure individual item remarks or customized specifications</p>
                     </div>
-                    <span id="cart-count-badge" class="bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold px-2.5 py-1 rounded-lg text-xs border border-slate-100 dark:border-slate-800">0 Rows Loaded</span>
+                    <span id="cart-count-badge" class="text-slate-300 font-bold px-2.5 py-1 rounded-lg text-xs border theme-border bg-white/5">0 Rows Loaded</span>
                 </div>
 
                 <div class="overflow-x-auto -mx-4 sm:mx-0">
                     <div class="inline-block min-w-full align-middle px-4 sm:px-0">
-                        <table class="min-w-[650px] lg:min-w-full text-left border-collapse text-xs sm:text-sm">
+                        <table class="min-w-[780px] lg:min-w-full text-left border-collapse text-xs sm:text-sm table-auto">
                             <thead>
-                                <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                                    <th class="py-3 px-4 text-[10px] tracking-widest w-1/4">Particular Description</th>
-                                    <th class="py-3 px-4 text-[10px] tracking-widest w-1/3">Customized Remarks</th>
-                                    <th class="py-3 px-4 text-center text-[10px] tracking-widest w-16">Qty</th>
-                                    <th class="py-3 px-4 text-right text-[10px] tracking-widest">Rate</th>
-                                    <th class="py-3 px-4 text-right text-[10px] tracking-widest">Subtotal</th>
-                                    <th class="py-3 px-4 text-center w-10"></th>
+                                <tr class="border-b theme-border text-slate-400 font-bold uppercase tracking-wider">
+                                    <th class="py-3 px-3 text-[10px] tracking-widest whitespace-nowrap">Particular Description</th>
+                                    <th class="py-3 px-3 text-[10px] tracking-widest whitespace-nowrap">Customized Remarks</th>
+                                    <th class="py-3 px-2 text-center text-[10px] tracking-widest whitespace-nowrap">Qty</th>
+                                    <th class="py-3 px-3 text-right text-[10px] tracking-widest text-amber-500 whitespace-nowrap">P. Rate</th>
+                                    <th class="py-3 px-3 text-right text-[10px] tracking-widest whitespace-nowrap">Rate</th>
+                                    <th class="py-3 px-3 text-right text-[10px] tracking-widest whitespace-nowrap">Subtotal</th>
+                                    <th class="py-3 px-2 text-center w-8"></th>
                                 </tr>
                             </thead>
-                            <tbody id="cart-list" class="divide-y divide-slate-100 dark:divide-slate-900 font-medium">
-                                <tr>
-                                    <td colspan="6" class="text-center py-16 text-slate-400 dark:text-slate-600 text-xs italic bg-slate-50/30 dark:bg-slate-900/10 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
-                                        No rows are currently staged. Head over to the 'Catalog Grid' tab to choose elements.
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody id="cart-list" class="divide-y divide-transparent font-medium">
+                                </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Client Summary Sidebar Context Control -->
             <div class="lg:col-span-4 space-y-6">
-                <div class="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-xl border border-slate-200/60 dark:border-slate-900 p-6 space-y-5 shadow-xs">
-                    <h3 class="text-xs font-bold text-slate-900 dark:text-white tracking-wider uppercase border-b border-slate-100 dark:border-slate-900 pb-3 heading-font">Client Parameters</h3>
+                <div class="backdrop-blur-md rounded-xl border theme-border p-6 space-y-5 shadow-xs bg-white/5">
+                    <h3 class="text-xs font-bold tracking-wider uppercase border-b theme-border pb-3 heading-font">Client Parameters</h3>
                     
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Account / Customer Name</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Account / Customer Name</label>
                         <input type="text" id="client-name" placeholder="Counter Sale Client..." oninput="syncQuotationHeader()"
-                               class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
+                               class="w-full px-3 py-2.5 bg-white/5 border theme-border rounded-lg text-current text-xs focus:outline-hidden transition-all">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Quotation Profile Type</label>
-                        <select id="quote-type-select" onchange="syncQuotationHeader()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs font-bold focus:outline-hidden cursor-pointer">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quotation Profile Type</label>
+                        <select id="quote-type-select" onchange="syncQuotationHeader()" class="w-full px-3 py-2.5 bg-white/5 border theme-border rounded-lg text-current text-xs font-bold focus:outline-hidden cursor-pointer dark:bg-slate-900">
                             <option value="Commercial Quotation">🏢 Commercial Quotation</option>
                             <option value="Residential Quotation">🏡 Residential Quotation</option>
                         </select>
                     </div>
                     
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Rate Profile Tier Mode</label>
-                        <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-900 p-1 rounded-lg border border-slate-200/40 dark:border-slate-800/60">
-                            <button onclick="setPriceTier('retail')" id="tier-retail" class="py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700">🟢 Retail Profile</button>
-                            <button onclick="setPriceTier('dealer')" id="tier-dealer" class="py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">🔵 Dealer Matrix</button>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Rate Profile Tier Mode</label>
+                        <div class="grid grid-cols-2 gap-2 bg-white/5 p-1 rounded-lg border theme-border">
+                            <button onclick="setPriceTier('retail')" id="tier-retail" class="py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer theme-accent-btn">Retail Profile</button>
+                            <button onclick="setPriceTier('dealer')" id="tier-dealer" class="py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 hover:text-current">Dealer Matrix</button>
                         </div>
                     </div>
                     
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Dynamic Discount Adjustment</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dynamic Discount Adjustment</label>
                         <div class="flex gap-2">
                             <input type="number" id="discount-input" min="0" placeholder="0" oninput="updateCartCalculations()" 
-                                   class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
-                            <select id="discount-type" onchange="updateCartCalculations()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2 text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer focus:outline-hidden">
+                                   class="w-full px-3 py-2.5 bg-white/5 border theme-border rounded-lg text-current text-xs focus:outline-hidden transition-all">
+                            <select id="discount-type" onchange="updateCartCalculations()" class="bg-white/5 border theme-border rounded-lg px-2 text-xs font-bold text-slate-400 cursor-pointer focus:outline-hidden dark:bg-slate-900">
                                 <option value="percentage">% Ratio</option>
                                 <option value="flat">₹ Value</option>
                             </select>
@@ -216,7 +265,7 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-900/90 dark:bg-slate-900/60 backdrop-blur-md p-6 rounded-xl space-y-4 text-slate-400 border border-transparent dark:border-slate-800/80 shadow-md">
+                <div class="bg-slate-900/90 p-6 rounded-xl space-y-4 text-slate-400 border theme-border shadow-md">
                     <div class="flex justify-between items-center text-xs font-bold">
                         <span>GROSS CUMULATIVE SUM:</span>
                         <span class="font-mono text-white">₹<span id="cart-subtotal">0.00</span></span>
@@ -232,71 +281,92 @@
                     </div>
                 </div>
 
-                <button onclick="activateTab('quotation')" class="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-white font-bold py-3 px-4 rounded-xl transition-all transform active:scale-[0.99] flex justify-center items-center gap-2 cursor-pointer text-xs tracking-wider uppercase heading-font shadow-md relative z-10">
+                <button onclick="activateTab('quotation')" class="w-full theme-accent-btn font-bold py-3 px-4 rounded-xl transition-all transform active:scale-[0.99] flex justify-center items-center gap-2 cursor-pointer text-xs tracking-wider uppercase heading-font shadow-md relative z-10">
                     Compile Official Statement ➔
                 </button>
             </div>
         </div>
 
-        <!-- CONTENT TAB 3: MANUAL QUOTATION GENERATOR DESK -->
         <div id="tab-manual-content" class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 hidden no-print animate-slide-in">
-            <div class="lg:col-span-8 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-xl border border-slate-200/60 dark:border-slate-900 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div class="pb-4 border-b border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div class="lg:col-span-8 space-y-6">
+                
+                <div class="backdrop-blur-md rounded-xl border theme-border p-4 sm:p-5 bg-white/5 space-y-3">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900 dark:text-white tracking-tight heading-font">Manual Item Drafting Desk</h2>
-                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Type custom parameters cleanly without standard index constraints</p>
+                        <h3 class="text-xs font-extrabold tracking-wider uppercase text-slate-400 heading-font">⚡ One-Click System Macro Presets</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Instantly append fully configured equipment setups into your manual workspace to bypass repetitive drafting typing.</p>
                     </div>
-                    <button onclick="addManualRow()" class="px-3 py-1.5 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5 shadow-sm">
-                        ➕ Add New Line Row
-                    </button>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="injectPresetBundle('solar3kw')" class="px-3 py-2 rounded-xl border theme-border bg-white/5 hover:bg-emerald-500/10 text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5">
+                            ☀️ 3kW Hybrid Setup
+                        </button>
+                        <button onclick="injectPresetBundle('solar5kw')" class="px-3 py-2 rounded-xl border theme-border bg-white/5 hover:bg-amber-500/10 text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5">
+                            🔋 5kW Off-Grid Setup
+                        </button>
+                        <button onclick="injectPresetBundle('dbbox')" class="px-3 py-2 rounded-xl border theme-border bg-white/5 hover:bg-blue-500/10 text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5">
+                            ⚡ AC/DC Distribution Kit
+                        </button>
+                        <button onclick="clearManualWorkspace()" class="px-3 py-2 rounded-xl border border-rose-500/30 bg-rose-500/5 hover:bg-rose-500/20 text-rose-400 text-xs font-bold cursor-pointer transition-all ml-auto">
+                            🗑️ Clear All
+                        </button>
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto -mx-4 sm:mx-0">
-                    <div class="inline-block min-w-full align-middle px-4 sm:px-0">
-                        <table class="min-w-[650px] lg:min-w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead>
-                                <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
-                                    <th class="py-3 px-3 text-[10px] tracking-widest w-1/4">Item Particular Name</th>
-                                    <th class="py-3 px-3 text-[10px] tracking-widest w-1/3">Detailed Description</th>
-                                    <th class="py-3 px-3 text-center text-[10px] tracking-widest w-16">Qty</th>
-                                    <th class="py-3 px-3 text-right text-[10px] tracking-widest w-24">Rate (₹)</th>
-                                    <th class="py-3 px-3 text-right text-[10px] tracking-widest w-28">Amount (₹)</th>
-                                    <th class="py-3 px-3 text-center w-10"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="manual-items-list" class="divide-y divide-slate-100 dark:divide-slate-900 font-medium">
-                                <!-- Dynamic manual row structures inject here -->
-                            </tbody>
-                        </table>
+                <div class="backdrop-blur-md rounded-xl border theme-border p-4 sm:p-6 space-y-4 shadow-xs bg-white/5">
+                    <div class="pb-4 border-b theme-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <h2 class="text-base font-bold tracking-tight heading-font">Manual Item Drafting Desk</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">Type custom parameters cleanly without standard index constraints</p>
+                        </div>
+                        <button onclick="addManualRow()" class="px-3 py-1.5 theme-accent-btn text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5 shadow-sm">
+                            ➕ Add New Line Row
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto -mx-4 sm:mx-0">
+                        <div class="inline-block min-w-full align-middle px-4 sm:px-0">
+                            <table class="min-w-[650px] lg:min-w-full text-left border-collapse text-xs sm:text-sm">
+                                <thead>
+                                    <tr class="border-b theme-border text-slate-400 font-bold uppercase tracking-wider">
+                                        <th class="py-3 px-3 text-[10px] tracking-widest w-1/4">Item Particular Name</th>
+                                        <th class="py-3 px-3 text-[10px] tracking-widest w-1/3">Detailed Description</th>
+                                        <th class="py-3 px-3 text-center text-[10px] tracking-widest w-16">Qty</th>
+                                        <th class="py-3 px-3 text-right text-[10px] tracking-widest w-24">Rate (₹)</th>
+                                        <th class="py-3 px-3 text-right text-[10px] tracking-widest w-28">Amount (₹)</th>
+                                        <th class="py-3 px-3 text-center w-10"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manual-items-list" class="divide-y divide-transparent font-medium">
+                                    </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Manual Control Sidebar Framework -->
             <div class="lg:col-span-4 space-y-6">
-                <div class="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-xl border border-slate-200/60 dark:border-slate-900 p-6 space-y-5 shadow-xs">
-                    <h3 class="text-xs font-bold text-slate-900 dark:text-white tracking-wider uppercase border-b border-slate-100 dark:border-slate-900 pb-3 heading-font">Client Parameters</h3>
+                <div class="backdrop-blur-md rounded-xl border theme-border p-6 space-y-5 shadow-xs bg-white/5">
+                    <h3 class="text-xs font-bold tracking-wider uppercase border-b theme-border pb-3 heading-font">Client Parameters</h3>
                     
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Account / Customer Name</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Account / Customer Name</label>
                         <input type="text" id="manual-client-name" placeholder="Counter Sale Client..." oninput="syncManualHeader()"
-                               class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
+                               class="w-full px-3 py-2.5 bg-white/5 border theme-border rounded-lg text-current text-xs focus:outline-hidden transition-all">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Quotation Profile Type</label>
-                        <select id="manual-quote-type-select" onchange="syncManualHeader()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs font-bold focus:outline-hidden cursor-pointer">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quotation Profile Type</label>
+                        <select id="manual-quote-type-select" onchange="syncManualHeader()" class="w-full px-3 py-2.5 bg-white/5 border theme-border rounded-lg text-current text-xs font-bold focus:outline-hidden cursor-pointer dark:bg-slate-900">
                             <option value="Commercial Quotation">🏢 Commercial Quotation</option>
                             <option value="Residential Quotation">🏡 Residential Quotation</option>
                         </select>
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Dynamic Discount Adjustment</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dynamic Discount Adjustment</label>
                         <div class="flex gap-2">
                             <input type="number" id="manual-discount-input" min="0" placeholder="0" oninput="calculateManualTotals()" 
-                                   class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 text-xs focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-950 transition-all">
-                            <select id="manual-discount-type" onchange="calculateManualTotals()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2 text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer focus:outline-hidden">
+                                   class="w-full px-3 py-2.5 bg-white/5 border theme-border rounded-lg text-current text-xs focus:outline-hidden transition-all">
+                            <select id="manual-discount-type" onchange="calculateManualTotals()" class="bg-white/5 border theme-border rounded-lg px-2 text-xs font-bold text-slate-400 cursor-pointer focus:outline-hidden dark:bg-slate-900">
                                 <option value="percentage">% Ratio</option>
                                 <option value="flat">₹ Value</option>
                             </select>
@@ -304,7 +374,7 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-900/90 dark:bg-slate-900/60 backdrop-blur-md p-6 rounded-xl space-y-4 text-slate-400 border border-transparent dark:border-slate-800/80 shadow-md">
+                <div class="bg-slate-900/90 p-6 rounded-xl space-y-4 text-slate-400 border theme-border shadow-md">
                     <div class="flex justify-between items-center text-xs font-bold">
                         <span>TOTAL AMOUNT:</span>
                         <span class="font-mono text-white">₹<span id="manual-subtotal">0.00</span></span>
@@ -320,16 +390,14 @@
                     </div>
                 </div>
 
-                <button onclick="activateTab('quotation')" class="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-white font-bold py-3 px-4 rounded-xl transition-all transform active:scale-[0.99] flex justify-center items-center gap-2 cursor-pointer text-xs tracking-wider uppercase heading-font shadow-md relative z-10">
+                <button onclick="activateTab('quotation')" class="w-full theme-accent-btn font-bold py-3 px-4 rounded-xl transition-all transform active:scale-[0.99] flex justify-center items-center gap-2 cursor-pointer text-xs tracking-wider uppercase heading-font shadow-md relative z-10">
                     Compile Official Statement ➔
                 </button>
             </div>
         </div>
 
-        <!-- CONTENT TAB 4: CLEAN STATEMENT PREVIEW SHEET -->
-        <div id="tab-quotation-content" class="hidden max-w-5xl mx-auto bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-900 rounded-xl p-5 sm:p-12 print-sheet animate-slide-in shadow-xs relative z-10">
+        <div id="tab-quotation-content" class="hidden max-w-5xl mx-auto bg-white border border-slate-200 rounded-xl p-5 sm:p-12 print-sheet animate-slide-in shadow-xs relative z-10">
             
-            <!-- EXPORT CONTAINER FOR GRAPH RENDERING -->
             <div id="quotation-capture-area" class="bg-white text-slate-900 p-4 rounded-xl transition-colors">
                 <div class="border-b-2 border-slate-900 pb-6 mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div>
@@ -374,7 +442,6 @@
                     </div>
                 </div>
 
-                <!-- ASSURANCE MODULE: VALIDITY, WARRANTY, AND ROUTING BANK COORDINATES -->
                 <div class="mt-12 pt-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
                     <div>
                         <h4 class="text-[11px] font-bold tracking-wider uppercase text-slate-900 heading-font mb-2.5">Terms &amp; Conditions:</h4>
@@ -443,16 +510,16 @@
                 </div>
             </div>
 
-            <div class="mt-12 pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4 no-print relative z-10">
-                <p class="text-xs text-slate-400 dark:text-slate-500 italic text-center sm:text-left">Confirm mathematical item rows adjustments prior to export workflows.</p>
+            <div class="mt-12 pt-6 border-t theme-border flex flex-col sm:flex-row justify-between items-center gap-4 no-print relative z-10">
+                <p class="text-xs text-slate-400 italic text-center sm:text-left">Confirm mathematical item rows adjustments prior to export workflows.</p>
                 <div class="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
-                    <button id="modify-selection-back-btn" onclick="activateTab('builder')" class="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors text-slate-500 dark:text-slate-400 cursor-pointer w-full sm:w-auto">
+                    <button id="modify-selection-back-btn" onclick="activateTab('builder')" class="px-4 py-2 border theme-border rounded-lg text-xs font-bold hover:bg-white/10 transition-colors text-slate-400 cursor-pointer w-full sm:w-auto">
                         ← Modify Selection
                     </button>
                     <button onclick="exportQuotationAsPNG()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-xs tracking-wider uppercase cursor-pointer flex justify-center items-center gap-2 w-full sm:w-auto heading-font transition-colors">
                         🖼️ Export Image (PNG)
                     </button>
-                    <button onclick="window.print()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-white font-bold text-xs rounded-lg shadow-xs tracking-wider uppercase cursor-pointer flex justify-center items-center gap-2 w-full sm:w-auto heading-font">
+                    <button onclick="window.print()" class="px-5 py-2 theme-accent-btn font-bold text-xs rounded-lg shadow-xs tracking-wider uppercase cursor-pointer flex justify-center items-center gap-2 w-full sm:w-auto heading-font">
                         🖨️ Export PDF / Print
                     </button>
                 </div>
@@ -460,7 +527,6 @@
         </div>
     </main>
 
-    <!-- CORE SCRIPTS ENGINE -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhmUz7NSr5jSZgOYlZxL0-2RMFFS_pyvHYq8Fq67ohJ8qWt9D3v4k8syf0yEFmyc6h/exec";
 
@@ -470,7 +536,28 @@
         let activePriceTier = 'retail';
         let currentWorkflowMode = 'catalog';
 
-        // BACKGROUND CANVASES PROP PROPERTIES MATRIX
+        // DEFINED MACRO PRESET OBJECT MATRIX FOR QUICK INJECTIONS
+        const SYSTEM_PRESETS = {
+            solar3kw: [
+                { name: "3kW Hybrid Solar Inverter", description: "Dual MPPT tracker tracking profile, pure sine wave setup", qty: 1, rate: 45000 },
+                { name: "Mono PERC Solar Panels (550Wp)", description: "High efficiency A-grade photovoltaic modules", qty: 6, rate: 14200 },
+                { name: "Solar Tubular Battery 150Ah", description: "Deep cycle backup battery with 36+36 month warranty coverage", qty: 4, rate: 13500 },
+                { name: "Structure Mounting Frames", description: "3-Panel galvanized iron hot-dipped rustproof rail modules", qty: 2, rate: 4200 }
+            ],
+            solar5kw: [
+                { name: "5kW Heavy Off-Grid Inverter", description: "High-voltage performance array system workspace logic", qty: 1, rate: 68000 },
+                { name: "Mono PERC Solar Panels (550Wp)", description: "Premium tier low-light performance solar hardware components", qty: 9, rate: 13900 },
+                { name: "Solar Tubular Battery 200Ah", description: "Extended runtime deep discharge energy profile cells", qty: 4, rate: 16500 },
+                { name: "Elevated Structure Mounting Kit", description: "Custom heavy wind-load structural framework", qty: 1, rate: 12500 }
+            ],
+            dbbox: [
+                { name: "DC Distribution Box (2 String)", description: "Fitted with 1000V DC SPDs, fuses, and isolating circuit isolation", qty: 1, rate: 4500 },
+                { name: "AC Distribution Box (Single Phase)", description: "Includes 25A MCB protection alongside voltage surge suppression", qty: 1, rate: 3200 },
+                { name: "Pure Copper Solar Cable 4sqmm", description: "UV protected twin core wire profile (Red/Black bundle)", qty: 60, rate: 85 }
+            ]
+        };
+
+        // BACKGROUND CANVASES MATRIX
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -486,7 +573,6 @@
             addManualRow();
         });
 
-        // BACKGROUND ENGINE INITIALIZATION
         function initBackgroundProps() {
             resizeCanvas();
             particles = [];
@@ -510,20 +596,18 @@
 
         function animateBackgroundProps() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // COLOR UPDATE: Set to a premium warm amber yellow (RGB: 245, 158, 11) for maximum fidelity across light & dark profiles
-            ctx.fillStyle = 'rgba(245, 158, 11,';
+            const rgbValue = getComputedStyle(document.documentElement).getPropertyValue('--particle-rgb').trim() || "15, 23, 42";
+            ctx.fillStyle = `rgba(${rgbValue},`;
 
             particles.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = ctx.fillStyle.substring(0, ctx.fillStyle.lastIndexOf(',') + 1) + ` ${p.alpha})`;
+                ctx.fillStyle = `rgba(${rgbValue}, ${p.alpha})`;
                 ctx.fill();
 
                 p.x += p.vx;
                 p.y += p.vy;
 
-                // Loop layout bounds boundary conditions
                 if (p.x < 0) p.x = canvas.width;
                 if (p.x > canvas.width) p.x = 0;
                 if (p.y < 0) p.y = canvas.height;
@@ -534,46 +618,40 @@
         }
 
         function initializeThemeProfile() {
-            const storedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-toggle-icon').innerText = "☀️ Light Profile";
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-toggle-icon').innerText = "🌙 Dark Profile";
-            }
+            const storedTheme = localStorage.getItem('app-theme-choice') || 'light';
+            document.getElementById('themeSelector').value = storedTheme;
+            changeThemeEngine(storedTheme);
         }
 
-        function toggleDarkMode() {
-            const isDarkActive = document.documentElement.classList.contains('dark');
-            if (isDarkActive) {
+        function changeThemeEngine(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('app-theme-choice', themeName);
+            if (themeName === 'light') {
                 document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                document.getElementById('theme-toggle-icon').innerText = "🌙 Dark Profile";
             } else {
                 document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                document.getElementById('theme-toggle-icon').innerText = "☀️ Light Profile";
             }
+            if (inventoryData.length > 0) renderInventoryCards(inventoryData);
         }
 
-        function showNotification(itemName) {
+        function showNotification(itemName, type = "success") {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
-            toast.className = "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-slide-in pointer-events-auto w-full z-50";
+            toast.className = "bg-slate-900 text-white border border-slate-800 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-slide-in pointer-events-auto w-full z-50";
+            
+            const checkIcon = type === "success" ? "bg-emerald-500 text-slate-950" : "bg-blue-500 text-white";
+            const microHeader = type === "success" ? "Added To Order Desk" : "System Preset Loaded";
+            
             toast.innerHTML = `
-                <div class="h-4 w-4 rounded-full bg-emerald-500 text-slate-950 dark:text-white flex items-center justify-center text-[10px] font-bold">✓</div>
+                <div class="h-4 w-4 rounded-full ${checkIcon} flex items-center justify-center text-[10px] font-bold">✓</div>
                 <div class="flex-1">
-                    <p class="text-[9px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider">Added To Order Desk</p>
+                    <p class="text-[9px] font-bold uppercase text-slate-400 tracking-wider">${microHeader}</p>
                     <p class="text-xs font-bold line-clamp-1">${itemName}</p>
                 </div>
             `;
             
             container.appendChild(toast);
-            
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(4px)';
@@ -585,11 +663,11 @@
         function activateTab(tabId) {
             ['catalog', 'builder', 'manual', 'quotation'].forEach(t => {
                 document.getElementById(`tab-${t}-content`).classList.add('hidden');
-                document.getElementById(`btn-tab-${t}`).className = "flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 snap-center hover:bg-white/40 dark:hover:bg-slate-800/30";
+                document.getElementById(`btn-tab-${t}`).className = "flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 text-slate-400 hover:text-current snap-center hover:bg-white/10";
             });
 
             document.getElementById(`tab-${tabId}-content`).classList.remove('hidden');
-            document.getElementById(`btn-tab-${tabId}`).className = "flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700 snap-center transform scale-[1.02]";
+            document.getElementById(`btn-tab-${tabId}`).className = "flex-1 text-center justify-center flex items-center gap-1.5 px-4 sm:px-6 py-2 rounded-lg font-bold text-xs tracking-wide cursor-pointer transition-all duration-300 theme-accent-btn shadow-xs snap-center transform scale-[1.02]";
 
             if (tabId === 'catalog' || tabId === 'builder') {
                 currentWorkflowMode = 'catalog';
@@ -626,7 +704,7 @@
         function renderInventoryCards(items) {
             const gridContainer = document.getElementById('catalog-card-grid');
             if (items.length === 0) {
-                gridContainer.innerHTML = `<div class="col-span-full text-center p-16 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md text-slate-400 dark:text-slate-600 text-xs italic rounded-xl border border-slate-100 dark:border-slate-900">No active stock matches your query criteria.</div>`;
+                gridContainer.innerHTML = `<div class="col-span-full text-center p-16 theme-card backdrop-blur-md text-slate-400 text-xs italic rounded-xl border">No active stock matches your query criteria.</div>`;
                 return;
             }
 
@@ -635,17 +713,17 @@
                 const activePrice = activePriceTier === 'retail' ? parseFloat(item.retail_price || 0) : parseFloat(item.dealer_price || 0);
                 
                 return `
-                    <div class="ecommerce-card bg-white/60 hover:bg-white dark:bg-slate-900/30 dark:hover:bg-slate-900/80 backdrop-blur-xs border border-slate-100/70 hover:border-slate-200/80 dark:border-slate-900/60 dark:hover:border-slate-800 rounded-xl p-5 flex flex-col justify-between text-left group shadow-xs relative z-10">
+                    <div class="ecommerce-card theme-card backdrop-blur-xs border rounded-xl p-5 flex flex-col justify-between text-left group shadow-xs relative z-10">
                         <div class="flex-1 flex flex-col justify-between">
                             <div class="space-y-2">
-                                <span class="text-[9px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md">ID: #${item.id || 'N/A'}</span>
-                                <h1 class="text-base font-extrabold text-slate-900 dark:text-white tracking-tight heading-font uppercase pt-1">${item.name || 'UNNAMED STOCK ITEM'}</h1>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">${specLabel}</p>
+                                <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase bg-white/10 px-2 py-0.5 rounded-md">ID: #${item.id || 'N/A'}</span>
+                                <h1 class="text-base font-extrabold tracking-tight heading-font uppercase pt-1">${item.name || 'UNNAMED STOCK ITEM'}</h1>
+                                <p class="text-sm text-slate-400 font-medium leading-relaxed">${specLabel}</p>
                             </div>
                             
-                            <div class="pt-4 flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-900 mt-5">
+                            <div class="pt-4 flex items-center justify-between gap-2 border-t theme-border mt-5">
                                 <span class="text-base font-extrabold text-[#e15b5b] dark:text-[#f87171] font-mono">₹${activePrice.toFixed(2)}</span>
-                                <button onclick="addToCart('${item.id}')" class="px-3 py-1.5 bg-slate-950 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 text-[10px] font-bold tracking-wider uppercase rounded-lg cursor-pointer transition-all">
+                                <button onclick="addToCart('${item.id}')" class="px-3 py-1.5 theme-accent-btn text-[10px] font-bold tracking-wider uppercase rounded-lg cursor-pointer transition-all">
                                     + Add Item
                                 </button>
                             </div>
@@ -667,8 +745,8 @@
 
         function setPriceTier(tier) {
             activePriceTier = tier;
-            document.getElementById('tier-retail').className = tier === 'retail' ? "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700" : "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-200";
-            document.getElementById('tier-dealer').className = tier === 'dealer' ? "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/40 dark:border-slate-700" : "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-200";
+            document.getElementById('tier-retail').className = tier === 'retail' ? "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer theme-accent-btn" : "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 hover:text-current";
+            document.getElementById('tier-dealer').className = tier === 'dealer' ? "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer theme-accent-btn" : "py-2 rounded-md font-bold text-xs text-center transition-all cursor-pointer text-slate-400 hover:text-current";
             renderInventoryCards(inventoryData);
             updateCartCalculations();
         }
@@ -719,7 +797,7 @@
             document.getElementById('cart-count-badge').innerText = `${cart.length} Rows Configured`;
 
             if (cart.length === 0) {
-                listContainer.innerHTML = `<tr><td colspan="6" class="text-center py-16 text-slate-400 dark:text-slate-600 text-xs italic bg-slate-50/30 dark:bg-slate-900/10 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">No rows are currently staged. Head over to the 'Catalog Grid' tab to choose elements.</td></tr>`;
+                listContainer.innerHTML = `<tr><td colspan="7" class="text-center py-16 text-slate-400 text-xs italic bg-white/5 rounded-xl border border-dashed theme-border">No rows are currently staged. Head over to the 'Catalog Grid' tab to choose elements.</td></tr>`;
                 document.getElementById('cart-subtotal').innerText = "0.00";
                 document.getElementById('cart-total').innerText = "0.00";
                 document.getElementById('discount-row').classList.add('hidden');
@@ -729,21 +807,23 @@
 
             listContainer.innerHTML = cart.map(item => {
                 const rate = activePriceTier === 'retail' ? parseFloat(item.retail_price || 0) : parseFloat(item.dealer_price || 0);
+                const purchaseRate = parseFloat(item.purchase_price || item.purchase_rate || 0);
                 const total = rate * item.qty;
                 subTotal += total;
                 return `
-                    <tr class="align-middle border-b border-slate-100 dark:border-slate-900/60">
-                        <td class="py-4 px-4 font-bold text-slate-900 dark:text-white uppercase text-xs">${item.name || 'Unnamed Stock'}</td>
-                        <td class="py-4 px-4">
-                            <input type="text" value="${item.custom_description}" oninput="updateLineDescription('${item.id}', this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 focus:outline-hidden focus:bg-white dark:focus:bg-slate-950" placeholder="Sizes, modifications...">
+                    <tr class="align-middle border-b border-white/5">
+                        <td class="py-4 px-3 font-bold uppercase text-xs">${item.name || 'Unnamed Stock'}</td>
+                        <td class="py-4 px-3">
+                            <input type="text" value="${item.custom_description}" oninput="updateLineDescription('${item.id}', this.value)" class="w-full bg-white/5 border theme-border rounded-lg px-3 py-1.5 text-xs font-semibold text-current focus:outline-hidden" placeholder="Sizes, modifications...">
                         </td>
-                        <td class="py-4 px-4 text-center">
-                            <input type="number" value="${item.qty}" min="0" onchange="updateQty('${item.id}', this.value)" class="w-12 text-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-1 text-xs font-bold focus:outline-hidden text-slate-800 dark:text-slate-200">
+                        <td class="py-4 px-2 text-center">
+                            <input type="number" value="${item.qty}" min="0" onchange="updateQty('${item.id}', this.value)" class="w-11 text-center bg-white/5 border theme-border rounded-md p-1 text-xs font-bold focus:outline-hidden text-current">
                         </td>
-                        <td class="py-4 px-4 text-right font-mono text-slate-400 dark:text-slate-500 text-xs">₹${rate.toFixed(2)}</td>
-                        <td class="py-4 px-4 text-right font-bold font-mono text-slate-900 dark:text-white text-xs">₹${total.toFixed(2)}</td>
-                        <td class="py-4 px-4 text-center">
-                            <button onclick="updateQty('${item.id}', 0)" class="text-slate-300 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer">🗑️</button>
+                        <td class="py-4 px-3 text-right font-mono text-amber-500 text-xs font-bold whitespace-nowrap">₹${purchaseRate.toFixed(2)}</td>
+                        <td class="py-4 px-3 text-right font-mono text-slate-400 text-xs whitespace-nowrap">₹${rate.toFixed(2)}</td>
+                        <td class="py-4 px-3 text-right font-bold font-mono text-current text-xs whitespace-nowrap">₹${total.toFixed(2)}</td>
+                        <td class="py-4 px-2 text-center">
+                            <button onclick="updateQty('${item.id}', 0)" class="text-slate-400 hover:text-rose-400 transition-colors cursor-pointer">🗑️</button>
                         </td>
                     </tr>
                 `;
@@ -769,16 +849,39 @@
             syncQuotationLedgerViewOnly();
         }
 
-        /* MANUAL LINE DRAWER SYSTEM ENGINE */
+        // DYNAMIC PRESET INJECTION INTERFACE ENGINE
+        function injectPresetBundle(presetKey) {
+            const bundle = SYSTEM_PRESETS[presetKey];
+            if (!bundle) return;
+
+            // Strip default empty manual row if no information is written inside it yet
+            if (manualCart.length === 1 && manualCart[0].name === '' && manualCart[0].rate === 0) {
+                manualCart = [];
+            }
+
+            bundle.forEach(presetItem => {
+                const rowId = 'manual_' + Date.now() + Math.random().toString(36).substring(2, 7);
+                manualCart.push({
+                    id: rowId,
+                    name: presetItem.name,
+                    description: presetItem.description,
+                    qty: presetItem.qty,
+                    rate: presetItem.rate
+                });
+            });
+
+            renderManualGrid();
+            showNotification(presetKey === 'solar3kw' ? "3kW Solar Pack" : presetKey === 'solar5kw' ? "5kW Solar Pack" : "AC/DC Box Kit", "info");
+        }
+
+        function clearManualWorkspace() {
+            manualCart = [];
+            addManualRow();
+        }
+
         function addManualRow() {
             const rowId = 'manual_' + Date.now() + Math.random().toString(36).substring(2, 7);
-            manualCart.push({
-                id: rowId,
-                name: '',
-                description: '',
-                qty: 1,
-                rate: 0
-            });
+            manualCart.push({ id: rowId, name: '', description: '', qty: 1, rate: 0 });
             renderManualGrid();
         }
 
@@ -801,9 +904,7 @@
             }
             
             const amtEl = document.getElementById(`amount-${rowId}`);
-            if(amtEl) {
-                amtEl.innerText = (row.qty * row.rate).toFixed(2);
-            }
+            if(amtEl) { amtEl.innerText = (row.qty * row.rate).toFixed(2); }
             calculateManualTotals();
         }
 
@@ -811,24 +912,24 @@
             const container = document.getElementById('manual-items-list');
             container.innerHTML = manualCart.map(row => {
                 return `
-                    <tr class="align-middle border-b border-slate-100 dark:border-slate-900/60">
+                    <tr class="align-middle border-b border-white/5">
                         <td class="py-3 px-2">
-                            <input type="text" value="${row.name}" oninput="updateManualField('${row.id}', 'name', this.value)" placeholder="Enter item name..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-hidden focus:bg-white dark:focus:bg-slate-950">
+                            <input type="text" value="${row.name}" oninput="updateManualField('${row.id}', 'name', this.value)" placeholder="Enter item name..." class="w-full bg-white/5 border theme-border rounded-lg px-3 py-1.5 text-xs font-semibold text-current focus:outline-hidden">
                         </td>
                         <td class="py-3 px-2">
-                            <input type="text" value="${row.description}" oninput="updateManualField('${row.id}', 'description', this.value)" placeholder="Enter description..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 focus:outline-hidden focus:bg-white dark:focus:bg-slate-950">
+                            <input type="text" value="${row.description}" oninput="updateManualField('${row.id}', 'description', this.value)" placeholder="Enter description..." class="w-full bg-white/5 border theme-border rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400 focus:outline-hidden">
                         </td>
                         <td class="py-3 px-2 text-center">
-                            <input type="number" min="0" value="${row.qty}" oninput="updateManualField('${row.id}', 'qty', this.value)" class="w-14 text-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-1.5 text-xs font-bold focus:outline-hidden text-slate-800 dark:text-slate-200">
+                            <input type="number" min="0" value="${row.qty}" oninput="updateManualField('${row.id}', 'qty', this.value)" class="w-14 text-center bg-white/5 border theme-border rounded-md p-1.5 text-xs font-bold focus:outline-hidden text-current">
                         </td>
                         <td class="py-3 px-2">
-                            <input type="number" min="0" step="0.01" value="${row.rate || ''}" placeholder="0.00" oninput="updateManualField('${row.id}', 'rate', this.value)" class="w-full text-right bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-1.5 text-xs font-bold font-mono focus:outline-hidden text-slate-800 dark:text-slate-200">
+                            <input type="number" min="0" step="0.01" value="${row.rate || ''}" placeholder="0.00" oninput="updateManualField('${row.id}', 'rate', this.value)" class="w-full text-right bg-white/5 border theme-border rounded-md p-1.5 text-xs font-bold font-mono focus:outline-hidden text-current">
                         </td>
-                        <td class="py-3 px-3 text-right font-bold font-mono text-slate-900 dark:text-white text-xs">
+                        <td class="py-3 px-3 text-right font-bold font-mono text-current text-xs">
                             ₹<span id="amount-${row.id}">${(row.qty * row.rate).toFixed(2)}</span>
                         </td>
                         <td class="py-3 px-2 text-center">
-                            <button onclick="removeManualRow('${row.id}')" class="text-slate-300 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer">🗑️</button>
+                            <button onclick="removeManualRow('${row.id}')" class="text-slate-400 hover:text-rose-400 transition-colors cursor-pointer">🗑️</button>
                         </td>
                     </tr>
                 `;
@@ -848,9 +949,7 @@
         function calculateManualTotals() {
             if (currentWorkflowMode !== 'manual') return;
             let subTotal = 0;
-            manualCart.forEach(row => {
-                subTotal += (row.qty * row.rate);
-            });
+            manualCart.forEach(row => { subTotal += (row.qty * row.rate); });
 
             let discInput = parseFloat(document.getElementById('manual-discount-input').value) || 0;
             let discType = document.getElementById('manual-discount-type').value;
@@ -907,7 +1006,6 @@
 
         function exportQuotationAsPNG() {
             const targetElement = document.getElementById('quotation-capture-area');
-            
             let clientName = "Counter_Sale_Client";
             let selectedType = "Commercial_Quotation";
             
@@ -920,14 +1018,7 @@
             }
             
             const dateStr = new Date().toISOString().split('T')[0];
-            
-            const options = {
-                scale: 2, 
-                useCORS: true,
-                backgroundColor: '#ffffff', 
-                logging: false,
-                willReadFrequently: true
-            };
+            const options = { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, willReadFrequently: true };
 
             html2canvas(targetElement, options).then(canvas => {
                 const imageURI = canvas.toDataURL("image/png");
@@ -937,9 +1028,7 @@
                 document.body.appendChild(virtualAnchor);
                 virtualAnchor.click();
                 document.body.removeChild(virtualAnchor);
-            }).catch(err => {
-                console.error("PNG Rendering Exception: ", err);
-            });
+            }).catch(err => { console.error("PNG Rendering Exception: ", err); });
         }
     </script>
 </body>
